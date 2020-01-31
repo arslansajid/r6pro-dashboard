@@ -73,7 +73,7 @@ class Header extends Component {
         <NavbarToggler className="d-md-down-none mr-auto" onClick={this.sidebarToggle}>
           <span className="navbar-toggler-icon"></span>
         </NavbarToggler>
-        <h3 className="mr-auto d-md-down-none admin-heading">Waffle World Admin Dashboard</h3>
+        <h3 className="mr-auto d-md-down-none admin-heading">R6Pro Admin Dashboard</h3>
         {this.props.currentUserImage ?
           <div className="user-image">
             <Link to={{ pathname: `/users/edit-user/${this.props.currentUserId}` }} id="user_img_tooltip">

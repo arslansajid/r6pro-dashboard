@@ -130,7 +130,7 @@ class Login extends Component {
                     <div style={style.logoWrapper} className={`svg-logo`}>
                       <img className={`companyLogo`} src={`${require('waffle_logo_2019.png')}`} />
                     </div>
-                      <div className={`text-center`} style={{ fontSize: '20px', paddingTop: "10px", fontWeight: "bold" }}>Waffle World</div>
+                      <div className={`text-center`} style={{ fontSize: '20px', paddingTop: "10px", fontWeight: "bold" }}>R6Pro Admin Dashboard</div>
                     </div>
                   </CardBody>
                 </Card>

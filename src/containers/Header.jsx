@@ -8,7 +8,7 @@ export default class Header extends React.Component {
     return (
       <div>
         <nav className="navbar navbar-inverse navbar-fixed-top">
-          <h3 style={{color: 'white'}} className="text-center">Waffle World Admin Dashboard</h3>
+          <h3 style={{color: 'white'}} className="text-center">R6Pro Admin Dashboard</h3>
         </nav>
       </div>
     );
