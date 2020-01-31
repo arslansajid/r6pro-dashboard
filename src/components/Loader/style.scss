@@ -1,0 +1,56 @@
+.loaderOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 99999;
+  min-height: 200px;
+  &.fixed {
+    position: fixed;
+  }
+  &.opaque {
+    background-color: rgba(255, 255, 255, 1);
+  }
+  & .logoCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: -50px;
+    & .logoWrapper {
+      width: 100px;
+      height: 100px;
+      animation: heartbeat 1s infinite;
+    & svg {
+        fill: var(--red);
+        width: 100%;
+      }
+    }
+  }
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale( .9 );
+  }
+  10% {
+    transform: scale( 1 );
+  }
+  20% {
+    transform: scale( .9 );
+  }
+  30% {
+    transform: scale( 1 );
+  }
+  40% {
+    transform: scale( .9 );
+  }
+  80% {
+    transform: scale( .9 );
+  }
+  100% {
+    transform: scale( .9 );
+  }
+}

@@ -1,0 +1,4 @@
+categories fetch by id is returning all categories
+delete categories is not documented properly
+by deleting a category its items should be removed
+cannot create new special offers
