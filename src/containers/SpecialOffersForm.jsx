@@ -5,7 +5,7 @@ import RichTextEditor from 'react-rte';
 import { Button } from 'reactstrap';
 import { API_END_POINT } from '../config';
 import Cookie from 'js-cookie';
-const token = Cookie.get('waffle_world_access_token');
+const token = Cookie.get('r6pro_access_token');
 
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -93,7 +93,7 @@ export default class UserForm extends React.Component {
     event.preventDefault();
     const { match, history } = this.props;
     const { loading, specialOffer } = this.state;
-    const token = Cookie.get('waffle_world_access_token');
+    const token = Cookie.get('r6pro_access_token');
     if (!loading) {
         this.setState({ loading: true });
         if(match.params.specialOfferId) {

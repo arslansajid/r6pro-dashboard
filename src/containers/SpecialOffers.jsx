@@ -39,7 +39,7 @@ export default class SpecialOffers extends React.Component {
     const requestParams = {
       "itemId": specialOfferId,
     }
-    const token = Cookie.get('waffle_world_access_token');
+    const token = Cookie.get('r6pro_access_token');
     if(confirm("Are you sure you want to delete this specialOffer?")) {
       axios.delete(`${API_END_POINT}/api/items/delete`, {data: requestParams, headers: {"auth-token": token}})
         .then(response => {

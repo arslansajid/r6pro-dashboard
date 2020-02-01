@@ -10,10 +10,10 @@ class Logout extends Component {
   componentWillMount() {
     axios.defaults.headers.common['Authorization'] = '';
     if (process.env.NODE_ENV === 'production') {
-      Cookie.remove('waffle_world_access_token')
+      Cookie.remove('r6pro_access_token')
     }
     else {
-      Cookie.remove('waffle_world_access_token');
+      Cookie.remove('r6pro_access_token');
     }
     //this.props.history.push("/login");
     window.location.href = ("/login");

@@ -9,7 +9,7 @@ import Cookie from 'js-cookie';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-const token = Cookie.get('waffle_world_access_token');
+const token = Cookie.get('r6pro_access_token');
 
 export default class AreaForm extends React.Component {
   constructor(props) {

@@ -99,7 +99,7 @@ export default class UserForm extends React.Component {
     event.preventDefault();
     const { match, history } = this.props;
     const { loading, user } = this.state;
-    const token = Cookie.get('waffle_world_access_token');
+    const token = Cookie.get('r6pro_access_token');
     if (!loading) {
         this.setState({ loading: true });
         if(match.params.userId) {

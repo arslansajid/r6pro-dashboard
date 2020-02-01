@@ -53,7 +53,7 @@ class App extends React.Component {
 
   componentWillMount() {
     const { dispatch, history } = this.props;
-    const token = Cookie.get('waffle_world_access_token');
+    const token = Cookie.get('r6pro_access_token');
     if (token) {
       // axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       axios.defaults.headers.common.Authorization = `${token}`;

@@ -7,7 +7,7 @@ import { API_END_POINT, PLACEHOLDER_URL } from '../config';
 import moment from "moment";
 import Cookie from 'js-cookie';
 
-const token = Cookie.get('waffle_world_access_token');
+const token = Cookie.get('r6pro_access_token');
 
 import HasRole from '../hoc/HasRole';
 

@@ -26,6 +26,7 @@ import '../scss/core/_dropdown-menu-right.scss'
 // Containers
 import App from './containers/App';
 import Login from './containers/Login';
+import Signup from './containers/Signup';
 import Logout from './containers/Logout';
 
 const history = createHistory({ basename: '/' });
@@ -40,6 +41,10 @@ ReactDOM.render((
           exact
           path="/login" name="Login"
           component={Login}/>
+          <Route
+          exact
+          path="/signup" name="Signup"
+          component={Signup}/>
         <Route
           exact
           path="/logout" name="Logout"

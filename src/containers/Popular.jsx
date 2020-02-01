@@ -38,7 +38,7 @@ export default class Popular extends React.Component {
     const requestParams = {
       "popularId": popularId,
     }
-    const token = Cookie.get('waffle_world_access_token');
+    const token = Cookie.get('r6pro_access_token');
     if(confirm("Are you sure you want to delete this popular?")) {
       axios.delete(`${API_END_POINT}/api/specialOffers/delete`, {data: requestParams, headers: {"auth-token": token}})
         .then(response => {

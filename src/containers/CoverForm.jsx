@@ -6,7 +6,7 @@ import { Button } from 'reactstrap';
 import moment from 'moment';
 import { API_END_POINT } from '../config';
 import Cookie from 'js-cookie';
-const token = Cookie.get('waffle_world_access_token');
+const token = Cookie.get('r6pro_access_token');
 
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/initialize';

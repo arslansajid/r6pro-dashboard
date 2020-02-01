@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { API_END_POINT } from '../config';
-const token = Cookie.get('waffle_world_access_token');
+const token = Cookie.get('r6pro_access_token');
 
 // import {Pagination} from 'react-bootstrap';
 // import LineChart from '../components/LineChart'

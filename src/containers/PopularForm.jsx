@@ -98,7 +98,7 @@ export default class PopularForm extends React.Component {
     event.preventDefault();
     const { match, history } = this.props;
     const { loading, popular } = this.state;
-    const token = Cookie.get('waffle_world_access_token');
+    const token = Cookie.get('r6pro_access_token');
     if (!loading) {
         const fd = new FormData();
         // if(profile_picture) {

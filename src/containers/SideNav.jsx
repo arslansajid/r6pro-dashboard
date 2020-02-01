@@ -19,13 +19,13 @@ export default class SideNav extends React.Component {
   logout() {
     axios.defaults.headers.common['Authorization'] = ''
     if (process.env.NODE_ENV === 'production') {
-      // Cookie.remove('waffle_world_access_token', {domain: `.${window.location.host}`})
-      // Cookie.remove('waffle_world_access_token', { path: '', domain: '.saaditrips.com' }); this was the code previously
-      Cookie.remove('waffle_world_access_token');
+      // Cookie.remove('r6pro_access_token', {domain: `.${window.location.host}`})
+      // Cookie.remove('r6pro_access_token', { path: '', domain: '.saaditrips.com' }); this was the code previously
+      Cookie.remove('r6pro_access_token');
     }
     else {
-      Cookie.remove('waffle_world_access_token');
-      // Cookie.remove('waffle_world_access_token', { path: '', domain: '.saaditrips.com' });
+      Cookie.remove('r6pro_access_token');
+      // Cookie.remove('r6pro_access_token', { path: '', domain: '.saaditrips.com' });
     }
     this.props.history.push("/login");
     // window.location.href = ("/");

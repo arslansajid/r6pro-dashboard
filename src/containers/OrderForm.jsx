@@ -9,7 +9,7 @@ import 'react-select/dist/react-select.css';
 
 import Cookie from 'js-cookie';
 
-const token = Cookie.get('waffle_world_access_token');
+const token = Cookie.get('r6pro_access_token');
 
 export default class CityForm extends React.Component {
   constructor(props) {
