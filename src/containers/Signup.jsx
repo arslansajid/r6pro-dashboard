@@ -32,30 +32,44 @@ const style = {
   },
 };
 
-class Login extends Component {
+class Signup extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      user: null,
-      username: '',
+      first_name: '',
+      last_name: '',
+      email: '',
       password: '',
-      loading: false
+      profile_photo: '',
+      loading: false,
     }
   }
 
   componentDidMount() {
-    let token = Cookie.get('r6pro_access_token');
-    if (token) {
-      this.props.history.push("/");
-    }
+    // let token = Cookie.get('r6pro_access_token');
+    // if (token) {
+    //   this.props.history.push("/");
+    // }
   }
 
   submit() {
     if (!this.state.loading) {
-      const user = { email: this.state.username, password: this.state.password };
+      const user = {
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
+        email: this.state.email,
+        password: this.state.password,
+        profile_photo: this.state.profile_photo,
+      };
       this.setState({ loading: true });
-      axios.post(`${API_END_POINT}/api/v1/users/sign_in`, user)
+      axios.post(`${API_END_POINT}/api/v1/users/sign_up`, {
+          first_name: this.state.first_name,
+          last_name: this.state.last_name,
+          email: this.state.email,
+          password: this.state.password,
+          profile_photo: this.state.profile_photo,
+      })
       .then(response => {
         //console.log("####", response);
         if (response && response.status == 200) {
@@ -68,13 +82,13 @@ class Login extends Component {
           else {
             Cookie.set('r6pro_access_token', `${token}`, { expires: 14 })
           }
-          //this.props.location.push("/");
-          window.location.href = ("/");
+          // this.props.location.push("/");
+          this.props.history.push("/login")
         }
       })
       .catch(error => {
         this.setState({ loading: false });
-        window.alert(error.response.data);
+        window.alert("ERROR");
       });
     }
   }
@@ -88,8 +102,8 @@ class Login extends Component {
               <CardGroup>
                 <Card className="p-4">
                   <CardBody>
-                    <h1>Login</h1>
-                    <p className="text-muted">Sign In to your account</p>
+                    <h1>Signup</h1>
+                    <p className="text-muted">Sign Up</p>
                     <Formsy onValidSubmit={this.submit.bind(this)}>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -97,10 +111,44 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="email" placeholder="Username" required
-                               ref={(input) => (this.username = input)}
-                               onChange={(e) => this.setState({ username: e.target.value })}/>
+                        <Input type="text" placeholder="First Name" required
+                               ref={(input) => (this.first_name = input)}
+                               onChange={(e) => this.setState({ first_name: e.target.value })}/>
                       </InputGroup>
+
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="icon-user"></i>
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="text" placeholder="Last Name" required
+                               ref={(input) => (this.last_name = input)}
+                               onChange={(e) => this.setState({ last_name: e.target.value })}/>
+                      </InputGroup>
+
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="icon-user"></i>
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="email" placeholder="Email" required
+                               ref={(input) => (this.email = input)}
+                               onChange={(e) => this.setState({ email: e.target.value })}/>
+                      </InputGroup>
+
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="icon-user"></i>
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="text" placeholder="Profile Photo"
+                               ref={(input) => (this.profile_photo = input)}
+                               onChange={(e) => this.setState({ profile_photo: e.target.value })}/>
+                      </InputGroup>
+                      
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
@@ -114,13 +162,8 @@ class Login extends Component {
                       <Row>
                         <Col xs="6">
                           <Button color="graana-red" className={`px-4 ${this.state.loading ? 'disabled' : ''}`}>
-                            <i className={`fa fa-spinner fa-pulse ${this.state.loading ? '' : 'd-none'}`}/> Login
+                            <i className={`fa fa-spinner fa-pulse ${this.state.loading ? '' : 'd-none'}`}/> Signup
                           </Button>
-                        </Col>
-                        <Col xs="6" className="text-right">
-                          <Link to="/signup">
-                            <Button color="link" className="px-0">Sign up</Button>
-                          </Link>
                         </Col>
                       </Row>
                     </Formsy>
@@ -145,8 +188,8 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
+Signup.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default withRouter(connect()(Login));
+export default withRouter(connect()(Signup));
