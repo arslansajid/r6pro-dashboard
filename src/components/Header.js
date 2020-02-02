@@ -64,10 +64,10 @@ class Header extends Component {
         </NavbarToggler>
         <NavbarBrand href="/" className="p-0">
           <div style={style.logoWrapper} className={`svg-logo`}>
-            <img className={/*`img-fluid`*/ `companyLogo`} src={`${require('waffle_logo_2019.png')}`} />
+            {/* <img className={`companyLogo`} src={`${require('waffle_logo_2019.png')}`} /> */}
           </div>
           <div className={`png-logo`}>
-            <img className={`img-fluid companyLogo`} src={`${require('waffle_logo_2019.png')}`} />
+            {/* <img className={`img-fluid companyLogo`} src={`${require('waffle_logo_2019.png')}`} /> */}
           </div>
         </NavbarBrand>
         <NavbarToggler className="d-md-down-none mr-auto" onClick={this.sidebarToggle}>

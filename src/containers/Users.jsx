@@ -5,6 +5,8 @@ import {Pagination} from 'react-bootstrap';
 
 import { API_END_POINT } from '../config';
 import Cookie from 'js-cookie';
+const token = Cookie.get('r6pro_access_token');
+const UUID = localStorage.getItem("UUID");
 
 export default class Users extends React.Component {
   constructor(props) {
@@ -21,11 +23,10 @@ export default class Users extends React.Component {
   }
   componentWillMount() {
     this.setState({ loading: true })
-    axios.get(`${API_END_POINT}/api/users/`)
+    axios.get(`${API_END_POINT}/api/v1/users/all_users`, {headers: {"Authentication": token, "UUID": UUID }})
       .then(response => {
         this.setState({
-          users: response.data.objects,
-          pages: Math.ceil(response.data.length/10),
+          users: response.data.all_users,
           loading: false,
           responseMessage: 'No Users Found'
         })
@@ -98,8 +99,9 @@ export default class Users extends React.Component {
               <thead>
                 <tr>
                   <th>Sr. #</th>
-                  {/* <th>Picture</th> */}
-                  <th>Name</th>
+                  <th>Picture</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
                   <th>Email</th>
                 </tr>
               </thead>
@@ -108,8 +110,9 @@ export default class Users extends React.Component {
                 this.state.users.map((user, index) => (
                   <tr key={index}>
                   <td>{index + 1}</td>
-                  {/* <td>{<img style={{height: '50px', width: '50px'}} src={user.profile_picture && user.profile_picture.url} />}</td> */}
-                  <td>{user.name}</td>
+                  <td>{<img style={{height: '50px', width: '50px'}} src={user.profile_photo && user.profile_photo} />}</td>
+                  <td>{user.first_name}</td>
+                  <td>{user.last_name}</td>
                   <td>{user.email}</td>
                       <td>
                         <Link to={`/users/edit_user/${user._id}`}>

@@ -5,32 +5,34 @@ import {Pagination} from 'react-bootstrap';
 
 import { API_END_POINT } from '../config';
 import Cookie from 'js-cookie';
+const token = Cookie.get('r6pro_access_token');
+const UUID = localStorage.getItem("UUID");
 
 import HasRole from '../hoc/HasRole';
 
-export default class SpecialOffers extends React.Component {
+export default class Sites extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      specialOffers: [],
+      sites: [],
       activePage: 1,
       pages: 1,
       q: '',
       loading: false,
-      responseMessage: 'Loading SpecialOffers...'
+      responseMessage: 'Loading Sites...'
     }
     // API_END_POINT = 'https://admin.saaditrips.com';
   }
   componentWillMount() {
     this.setState({ loading: true })
-    axios.get(`${API_END_POINT}/api/items/specialOffer`)
+    axios.get(`${API_END_POINT}/api/v1/sites`, {headers: {"Authentication": token, "UUID": UUID }})
       .then(response => {
         this.setState({
-          specialOffers: response.data.object,
+          sites: response.data,
           pages: Math.ceil(response.data.length/10),
           loading: false,
-          responseMessage: 'No SpecialOffers Found'
+          responseMessage: 'No Sites Found'
         })
       })
   }
@@ -40,12 +42,12 @@ export default class SpecialOffers extends React.Component {
       "itemId": specialOfferId,
     }
     const token = Cookie.get('r6pro_access_token');
-    if(confirm("Are you sure you want to delete this specialOffer?")) {
+    if(confirm("Are you sure you want to delete this site?")) {
       axios.delete(`${API_END_POINT}/api/items/delete`, {data: requestParams, headers: {"auth-token": token}})
         .then(response => {
-          const specialOffers = this.state.specialOffers.slice();
-          specialOffers.splice(index, 1);
-          this.setState({ specialOffers });
+          const sites = this.state.sites.slice();
+          sites.splice(index, 1);
+          this.setState({ sites });
           window.alert(response.data.msg)
         });
     }
@@ -73,13 +75,13 @@ export default class SpecialOffers extends React.Component {
   }
   render() {
     // console.log(this.state);
-    const {loading, specialOffers, responseMessage} = this.state; 
+    const {loading, sites, responseMessage} = this.state; 
     return (
       <div className="row animated fadeIn">
         <div className="col-12">
           <div className="row space-1">
             <div className="col-sm-4">
-              <h3>List of Special Offers</h3>
+              <h3>List of Sites</h3>
             </div>
             <div  className="col-sm-4">
               <div className='input-group'>
@@ -109,31 +111,26 @@ export default class SpecialOffers extends React.Component {
               <thead>
                 <tr>
                   <th>Sr. #</th>
+                  <th>Site Id</th>
                   <th>Picture</th>
                   <th>Name</th>
-                  <th>Price</th>
-                  <th>Offer Price</th>
-                  <th>Description</th>
                 </tr>
               </thead>
               <tbody>
-                {this.state.specialOffers && this.state.specialOffers.length >= 1 ?
-                this.state.specialOffers.map((specialOffer, index) => (
+                {this.state.sites && this.state.sites.length >= 1 ?
+                this.state.sites.map((site, index) => (
                   <tr key={index}>
                   <td>{index + 1}</td>
-                  {/* <td>{specialOffer._id}</td> */}
-                  <td>{<img style={{height: '50px', width: '50px'}} src={specialOffer.image && specialOffer.image}/>}</td>
-                  <td>{specialOffer.name}</td>
-                  <td>{specialOffer.price}</td>
-                  <td>{specialOffer.specialOfferPrice}</td>
-                  <td>{specialOffer.description}</td>
+                  <td>{site.site_id}</td>
+                  <td>{<img style={{height: '50px', width: '50px'}} src={site.image && site.image}/>}</td>
+                  <td>{site.name}</td>
                   <td>
-                    <Link to={`/special-offers/edit_specialOffer/${specialOffer._id}`}>
+                    <Link to={`/special-offers/edit_specialOffer/${site._id}`}>
                       <span className="fa fa-edit" aria-hidden="true"></span>
                     </Link>
                   </td>
                   <td>
-                    <span className="fa fa-trash" style={{cursor: 'pointer'}} aria-hidden="true" onClick={() => this.deleteItem(specialOffer._id, index)}></span>
+                    <span className="fa fa-trash" style={{cursor: 'pointer'}} aria-hidden="true" onClick={() => this.deleteItem(site._id, index)}></span>
                   </td>
                 </tr>
                 )) :

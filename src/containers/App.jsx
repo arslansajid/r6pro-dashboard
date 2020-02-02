@@ -12,8 +12,8 @@ import Breadcrumb from '../components/Breadcrumb';
 import Stats from '../containers/Stats'
 import { Container } from 'reactstrap';
 
-import Categories from '../containers/Categories';
-import CategoryForm from '../containers/CategoryForm';
+import Strategies from './Strategies';
+import StrategyForm from './StrategyForm';
 
 import Users from '../containers/Users';
 import UserForm from '../containers/UserForm';
@@ -21,8 +21,8 @@ import UserForm from '../containers/UserForm';
 import SpecialOffers from '../containers/SpecialOffers';
 import SpecialOffersForm from '../containers/SpecialOffersForm';
 
-import Popular from '../containers/Popular';
-import PopularForm from '../containers/PopularForm';
+import Maps from './Maps';
+import MapForm from './MapForm';
 
 import CoverForm from '../containers/CoverForm';
 import CoverBanner from '../containers/CoverBanner';
@@ -30,8 +30,8 @@ import CoverBanner from '../containers/CoverBanner';
 import OrderForm from '../containers/OrderForm';
 import Orders from '../containers/Orders';
 
-import Items from './Items';
-import ItemsForm from './ItemsForm';
+import Operators from './Operators';
+import OperatorForm from './OperatorForm';
 
 import Properties from './Properties';
 import PropertyForm from './PropertyForm';
@@ -56,7 +56,7 @@ class App extends React.Component {
     const token = Cookie.get('r6pro_access_token');
     if (token) {
       // axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-      axios.defaults.headers.common.Authorization = `${token}`;
+      // axios.defaults.headers.common.Authorization = `${token}`;
       this.setState({ loading: false });
       // this.setState({
       //   displayApp: true,
@@ -122,22 +122,22 @@ class App extends React.Component {
               <Switch>
                   <Route exact={true} path='/' component={Stats}/>     
 
-                  <Route exact={true} path="/categories" component={Categories}/>
-                  <Route exact={true} path="/categories/category_form" component={CategoryForm}/>
-                  <Route exact={true} path="/categories/edit-category/:categoryId" component={CategoryForm}/>
-                  <Route path="/categories/category/:categoryId/items" component={Items}/>
+                  <Route exact={true} path="/strategies" component={Strategies}/>
+                  <Route exact={true} path="/strategies/strategy-form" component={StrategyForm}/>
+                  <Route exact={true} path="/strategies/edit-strategy/:strategyId" component={StrategyForm}/>
+                  {/* <Route path="/categories/category/:categoryId/items" component={Items}/> */}
 
                   <Route exact={true} path="/users" component={Users}/>
                   <Route exact={true} path='/users/user_form' component={UserForm}/>
                   <Route exact={true} path="/users/edit_user/:userId" component={UserForm}/>
 
-                  <Route exact={true} path="/special-offers" component={SpecialOffers}/>
+                  <Route exact={true} path="/sites" component={SpecialOffers}/>
                   <Route exact={true} path="/special-offers/specialOffer_form" component={SpecialOffersForm}/>
                   <Route exact={true} path="/special-offers/edit_specialOffer/:specialOfferId" component={SpecialOffersForm}/>
 
-                  <Route exact={true} path="/popular" component={Popular}/>
-                  <Route exact={true} path="/popular/popular_form" component={PopularForm}/>
-                  <Route exact={true} path="/popular/edit_popular/:popularId" component={PopularForm}/>
+                  <Route exact={true} path="/maps" component={Maps}/>
+                  <Route exact={true} path="/maps/map-form" component={MapForm}/>
+                  <Route exact={true} path="/maps/edit-map/:mapId" component={MapForm}/>
 
                   <Route exact={true} path="/gallery" component={CoverBanner}/>
                   <Route exact={true} path="/gallery/cover_banner_form" component={CoverForm}/>
@@ -147,10 +147,10 @@ class App extends React.Component {
                   <Route exact={true} path="/orders/order_form" component={OrderForm}/>
                   <Route exact={true} path="/orders/edit_order/:orderId" component={OrderForm}/>
                   
-                  <Route exact={true} path="/items" component={Items}/>
+                  <Route exact={true} path="/operators" component={Operators}/>
                   {/* <Route exact={true} path="/items/:categoryId" component={Items}/> */}
-                  <Route exact={true} path="/items/edit_item/:itemId" component={ItemsForm}/>
-                  <Route exact={true} path="/items/items_form" component={ItemsForm}/>
+                  <Route exact={true} path="/operators/edit-operator/:operatorId" component={OperatorForm}/>
+                  <Route exact={true} path="/operators/operator-form" component={OperatorForm}/>
 
                   <Route exact={true} path="/properties" component={Properties}/>
                   <Route exact={true} path="properties/property-form" component={PropertyForm}/>

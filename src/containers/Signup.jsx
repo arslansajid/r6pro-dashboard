@@ -55,27 +55,21 @@ class Signup extends Component {
 
   submit() {
     if (!this.state.loading) {
-      const user = {
-        first_name: this.state.first_name,
-        last_name: this.state.last_name,
-        email: this.state.email,
-        password: this.state.password,
-        profile_photo: this.state.profile_photo,
-      };
       this.setState({ loading: true });
-      axios.post(`${API_END_POINT}/api/v1/users/sign_up`, {
-          first_name: this.state.first_name,
-          last_name: this.state.last_name,
-          email: this.state.email,
-          password: this.state.password,
-          profile_photo: this.state.profile_photo,
-      })
+      const { email, password, first_name, last_name /*, profile_photo */ } = this.state.user
+      axios.post(`${API_END_POINT}/api/v1/users/sign_up`, null, { params: {
+        email,
+        password,
+        first_name,
+        last_name,
+        // profile_photo
+      }})
       .then(response => {
         //console.log("####", response);
         if (response && response.status == 200) {
           const token = response.data.authToken;
           console.log('Token', token)
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           if (process.env.NODE_ENV === 'production') {
             Cookie.set('r6pro_access_token', `${token}`, { expires: 14 })
           }

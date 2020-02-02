@@ -1,9 +1,8 @@
 const routes = {
   '/': 'Home',
-  '/categories': 'Category',
-  '/categories/category_form': 'Category Form',
+  '/strategies': 'Strategies',
+  '/strategies/strategy-form': 'Strategy Form',
   '/categories/edit-category': 'Edit Category',
-  '/categories/category': 'Category Items',
 
   '/users': 'Users',
   '/users/user_form': 'User Form',
@@ -13,9 +12,9 @@ const routes = {
   '/special-offers/specialOffer_form': 'Special Offers Form',
   '/special-offers/edit_specialOffer': 'Edit Special Offers',
 
-  '/popular': 'Popular',
-  '/popular/popular_form': 'Popular Form',
-  '/popular/edit_popular': 'Edit Popular',
+  '/maps': 'Maps',
+  '/maps/map-form': 'Map Form',
+  '/maps/edit-map': 'Edit Map',
 
   '/properties': 'Properties',
   '/properties/edit-property': 'Edit Property',
@@ -30,9 +29,9 @@ const routes = {
   '/orders/order_form': 'Orders Form',
   '/orders/edit_order': 'Edit Orders',
 
-  '/items': 'Items',
-  '/items/edit_item': 'Edit Items',
-  '/items/items_form': 'Items Form',
+  '/operators': 'Operators',
+  '/operators/edit-operators': 'Edit Operator',
+  '/operators/operator-form': 'Operator Form',
 
 };
 export default routes;

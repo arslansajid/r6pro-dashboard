@@ -52,6 +52,7 @@ class Login extends Component {
   }
 
   submit() {
+    const { dispatch, history } = this.props;
     if (!this.state.loading) {
       const user = { email: this.state.username, password: this.state.password };
       this.setState({ loading: true });
@@ -59,9 +60,10 @@ class Login extends Component {
       .then(response => {
         //console.log("####", response);
         if (response && response.status == 200) {
-          const token = response.data.authToken;
+          const token = response.data.Authentication;
+          localStorage.setItem("UUID", response.data.UUID);
           console.log('Token', token)
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           if (process.env.NODE_ENV === 'production') {
             Cookie.set('r6pro_access_token', `${token}`, { expires: 14 })
           }
@@ -74,7 +76,7 @@ class Login extends Component {
       })
       .catch(error => {
         this.setState({ loading: false });
-        window.alert(error.response.data);
+        window.alert("ERROR");
       });
     }
   }
@@ -117,11 +119,11 @@ class Login extends Component {
                             <i className={`fa fa-spinner fa-pulse ${this.state.loading ? '' : 'd-none'}`}/> Login
                           </Button>
                         </Col>
-                        <Col xs="6" className="text-right">
+                        {/* <Col xs="6" className="text-right">
                           <Link to="/signup">
                             <Button color="link" className="px-0">Sign up</Button>
                           </Link>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Formsy>
                   </CardBody>
@@ -130,7 +132,7 @@ class Login extends Component {
                   <CardBody className="text-center">
                     <div>
                     <div style={style.logoWrapper} className={`svg-logo`}>
-                      <img className={`companyLogo`} src={`${require('waffle_logo_2019.png')}`} />
+                      {/* <img className={`companyLogo`} src={`${require('waffle_logo_2019.png')}`} /> */}
                     </div>
                       <div className={`text-center`} style={{ fontSize: '20px', paddingTop: "10px", fontWeight: "bold" }}>R6Pro Admin Dashboard</div>
                     </div>
@@ -147,6 +149,13 @@ class Login extends Component {
 
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  user: PropTypes.object,
 };
 
-export default withRouter(connect()(Login));
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  };
+}
+
+export default withRouter(connect(mapStateToProps)(Login));

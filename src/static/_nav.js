@@ -6,13 +6,13 @@ export default {
       icon: 'icon-chart',
     },
     {
-      name: 'Categories',
-      url: '/categories',
+      name: 'Strategies',
+      url: '/strategies',
       icon: 'icon-layers',
     },
     {
-      name: 'Items',
-      url: '/items',
+      name: 'Operators',
+      url: '/operators',
       icon: 'icon-list',
     },
     {
@@ -21,25 +21,25 @@ export default {
       icon: 'icon-user',
     },
     {
-      name: 'Special Offers',
-      url: '/special-offers',
+      name: 'Maps',
+      url: '/maps',
       icon: 'icon-fire',
     },
     {
-      name: 'Popular',
-      url: '/popular',
+      name: 'Sites',
+      url: '/sites',
       icon: 'icon-diamond',
     },
-    {
-      name: 'Orders',
-      url: '/orders',
-      icon: 'icon-handbag',
-    },
-    {
-      name: 'Gallery',
-      url: '/gallery',
-      icon: 'icon-picture',
-    },
+    // {
+    //   name: 'Orders',
+    //   url: '/orders',
+    //   icon: 'icon-handbag',
+    // },
+    // {
+    //   name: 'Gallery',
+    //   url: '/gallery',
+    //   icon: 'icon-picture',
+    // },
     {
       name: 'Logout',
       url: '/logout',

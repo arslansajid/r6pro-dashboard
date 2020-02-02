@@ -15,14 +15,12 @@ export default class UserForm extends React.Component {
     this.state = {
       loading: false,
       user: {
-        name: '',
-        // last_name: '',
-        // city_id: '',
+        first_name: '',
+        last_name: '',
         email: '',
-        // phone: '',
         password: '',
-        // address: '',
-        // user_type: '',
+        profile_photo: '',
+        loading: false,
       },
       cities: [],
       city: '',
@@ -37,12 +35,7 @@ export default class UserForm extends React.Component {
   }
 
   componentWillMount() {
-    // axios.get(`${API_END_POINT}/api/fetch/city-fetch`)
-    //   .then(response => {
-    //     this.setState({
-    //       cities: response.data,
-    //     })
-    //   })
+
   }
 
   componentDidMount() {
@@ -58,34 +51,10 @@ export default class UserForm extends React.Component {
             user: response.data.object[0],
             description: RichTextEditor.createValueFromString(response.data.description, 'html'),
           }, () => {
-            // axios.get(`${API_END_POINT}/api/fetchById/city-fetchById/${this.state.user.city_id}`)
-            // .then((response) => {
-            //   this.setState({
-            //     city: response.data[0],
-            //   });
-            // });
+
           });
         });
     }
-
-    setCity(selectedCity) {
-      this.setState(prevState => ({
-        city: selectedCity,
-        user: {
-          ...prevState.user,
-          city_id: selectedCity.ID,
-        },
-      }));
-    }
-
-  setDescription(description) {
-    const { user } = this.state;
-    user.description = description.toString('html');
-    this.setState({
-      user,
-      description,
-    });
-  }
 
   handleInputChange(event) {
     const { value, name } = event.target;
@@ -123,13 +92,18 @@ export default class UserForm extends React.Component {
           });
         }
         else {
-          axios.post(`${API_END_POINT}/api/users/register`, user)
-          .then((response) => {
-            if (response.data && response.status === 200) {
-              window.alert(response.data.msg);
-              this.setState({ loading: false });
-            } else {
-              window.alert('ERROR:', response.data.error)
+          const { email, password, first_name, last_name /*, profile_photo */ } = this.state.user
+          axios.post(`${API_END_POINT}/api/v1/users/sign_up`, null, { params: {
+            email,
+            password,
+            first_name,
+            last_name,
+            // profile_photo
+          }})
+          .then(response => {
+            console.log("####", response);
+            if (response && response.status == 200) {
+              window.alert("SAVED");
               this.setState({ loading: false });
             }
           })
@@ -142,8 +116,11 @@ export default class UserForm extends React.Component {
   }
 
   handleFile = (event) => {
+    const { user } = this.state;
+    user.profile_photo = event.target.files[0];
     this.setState({
       profile_picture: event.target.files.length ? event.target.files[0] : '',
+      user
     });
   }
 
@@ -152,58 +129,8 @@ export default class UserForm extends React.Component {
     const {
       loading,
       user,
-      description,
-      city,
-      cities,
     } = this.state;
-    const toolbarConfig = {
-      // Optionally specify the groups to display (displayed in the order listed).
-      display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'HISTORY_BUTTONS', 'BLOCK_TYPE_DROPDOWN'],
-      INLINE_STYLE_BUTTONS: [
-        {
-          label: 'Bold',
-          style: 'BOLD',
-          className: 'custom-css-class',
-        },
-        {
-          label: 'Italic',
-          style: 'ITALIC',
-        },
-        {
-          label: 'Underline',
-          style: 'UNDERLINE',
-        },
-      ],
-      BLOCK_TYPE_DROPDOWN: [
-        {
-          label: 'Normal',
-          style: 'unstyled',
-        },
-        {
-          label: 'Large Heading',
-          style: 'header-three',
-        },
-        {
-          label: 'Medium Heading',
-          style: 'header-four',
-        },
-        {
-          label: 'Small Heading',
-          style: 'header-five',
-        },
-      ],
-      BLOCK_TYPE_BUTTONS: [
-        {
-          label: 'UL',
-          style: 'unordered-list-item',
-        },
-        {
-          label: 'OL',
-          style: 'ordered-list-item',
-        },
-      ],
-    };
-    // console.log(this.state);
+
     return (
       <div className="row animated fadeIn">
         <div className="col-12">
@@ -230,9 +157,26 @@ export default class UserForm extends React.Component {
                         <input
                           required
                           type="text"
-                          name="name"
+                          name="first_name"
                           className="form-control"
-                          value={user.name}
+                          value={user.first_name}
+                          onChange={this.handleInputChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label
+                        className="control-label col-md-3 col-sm-3"
+                      >First Name
+                      </label>
+                      <div className="col-md-6 col-sm-6">
+                        <input
+                          required
+                          type="text"
+                          name="last_name"
+                          className="form-control"
+                          value={user.last_name}
                           onChange={this.handleInputChange}
                         />
                       </div>
@@ -272,51 +216,19 @@ export default class UserForm extends React.Component {
                       </div>
                     </div>
 
-                    {/* <div className="form-group row">
+                    <div className="form-group row">
                       <label className="control-label col-md-3 col-sm-3">Profile Picture</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
                           accept="image/*"
-                          name="profile_picture"
+                          name="profile_photo"
                           className="form-control"
                           onChange={this.handleFile}
-                          // required
-                          // required={coverForm.url ? 0 : 1}
                         />
                       </div>
                     </div>
 
-                    {user.profile_picture
-                      ? (
-                        <div className="form-group row">
-                        <label className="control-label col-md-3 col-sm-3"></label>
-                        <div className="col-md-6 col-sm-6">
-                          <img
-                          style={{marginRight: '5px'}}
-                          width="100"
-                          className="img-fluid"
-                          src={`${user.profile_picture.url}`}
-                          alt="profile_picture"
-                        />
-                          
-                        </div>
-                      </div>
-                      ) : null
-                    } */}
-
-                    {/* <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">Description</label>
-                      <div className="col-md-6 col-sm-6">
-                        <RichTextEditor
-                          value={description}
-                          toolbarConfig={toolbarConfig}
-                          onChange={(e) => {
-                            this.setDescription(e);
-                          }}
-                        />
-                      </div>
-                    </div> */}
                     <div className="ln_solid"></div>
                     <div className="form-group row">
                       <div className="col-md-6 col-sm-6 offset-md-3">
