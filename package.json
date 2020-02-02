@@ -65,12 +65,12 @@
   },
   "scripts": {
     "dev": "webpack -d --progress --watch --profile --env.dev",
-    "start": "webpack-dev-server --progress --color --inline --env.dev --history-api-fallback",
+    "start": "node server.js",
     "build": "webpack -p --progress --env.prod",
     "clean": "rimraf ./build"
   },
   "engines": {
-    "node": ">= 8.9.4",
-    "npm": ">= 5.6.0"
+    "npm": "6.11.3",
+    "node": "8.12.0"
   }
 }
