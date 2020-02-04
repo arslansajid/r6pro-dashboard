@@ -85,6 +85,12 @@ export default class MapForm extends React.Component {
     event.preventDefault();
     const { match, history } = this.props;
     const { loading, map } = this.state;
+
+    const fd = new FormData();
+    Object.keys(map).forEach((eachState, index) => {
+      fd.append(`${eachState}`, map[eachState]);
+    })
+
     if (!loading) {
 
         this.setState({ loading: true });
@@ -92,7 +98,7 @@ export default class MapForm extends React.Component {
           map.popularId = map._id
           this.setState({ map });
           // axios.patch('/api/map/update', fd)
-          axios.post(`${API_END_POINT}/api/users/update`, map, {headers: {"Authentication": token, "UUID": UUID }})
+          axios.post(`${API_END_POINT}/api/users/update`, fd, {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
               window.alert(response.data.msg);
@@ -104,7 +110,7 @@ export default class MapForm extends React.Component {
           });
         }
         else {
-          axios.post(`${API_END_POINT}/api/v1/maps`, map, {headers: {"Authentication": token, "UUID": UUID }})
+          axios.post(`${API_END_POINT}/api/v1/maps`, fd, {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
               window.alert("MAP SAVED!");
