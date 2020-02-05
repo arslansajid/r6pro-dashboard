@@ -46,15 +46,17 @@ export default class StrategyForm extends React.Component {
   componentDidMount() {
     const { match } = this.props;
       if (match.params.strategyId) {
-      const requestParams = {
-        "strategy_id": match.params.strategyId,
-      }
       axios.get(`${API_END_POINT}/api/v1/strategies/get_strategy?strategy_id=${match.params.strategyId}`, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           this.setState({
             strategy: response.data,
           }, () => {
-
+            axios.get(`${API_END_POINT}/api/v1/sites/get_site?site_id=${this.state.strategy.site_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            .then((response) => {
+              this.setState({
+                site: response.data
+              })
+            })
           });
         });
       }
@@ -104,21 +106,15 @@ export default class StrategyForm extends React.Component {
     const { match, history } = this.props;
     const { loading, strategy, gallery } = this.state;
 
-    // const fd = new FormData();
-    // fd.append('image', gallery);
-    // fd.append('strategy', JSON.stringify(strategy));
+    const fd = new FormData();
+    Object.keys(strategy).forEach((eachState, index) => {
+      fd.append(`${eachState}`, strategy[eachState]);
+    })
 
     if (!loading) {
         this.setState({ loading: true });
-
         if(match.params.strategyId) {
-          // strategy.categoryId = strategy._id
-          // delete strategy["_id"]
-          // delete strategy["userId"]
-          // delete strategy["date"]
-          // delete strategy["__v"]
-          // this.setState({ strategy });
-          axios.put(`${API_END_POINT}/api/v1/strategies/update_strategy?strategy_id=${match.params.strategyId}`, strategy, {headers: {"Authentication": token, "UUID": UUID }})
+          axios.put(`${API_END_POINT}/api/v1/strategies/update_strategy?strategy_id=${match.params.strategyId}`, fd, {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
               window.alert("Updated successfully!");
@@ -133,7 +129,7 @@ export default class StrategyForm extends React.Component {
             this.setState({ loading: false });
           })
         } else {
-          axios.post(`${API_END_POINT}/api/v1/strategies`, strategy, {headers: {"Authentication": token, "UUID": UUID }})
+          axios.post(`${API_END_POINT}/api/v1/strategies`, fd, {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
               window.alert("SAVED!");
@@ -265,21 +261,20 @@ export default class StrategyForm extends React.Component {
                       </div>
                     </div>
 
-
                     <div className="form-group row">
-                      <label
-                        className="control-label col-md-3 col-sm-3"
-                      >Strategy Type
-                      </label>
+                      <label className="control-label col-md-3 col-sm-3">Strategy Type</label>
                       <div className="col-md-6 col-sm-6">
-                        <input
-                          required
-                          type="text"
+                        <select
                           name="strategy_type"
-                          className="form-control"
                           value={strategy.strategy_type}
+                          className="form-control"
                           onChange={this.handleInputChange}
-                        />
+                          required
+                        >
+                          <option value="">Select Value</option>
+                          <option value="attack">Attack</option>
+                          <option value="defence">Defence</option>
+                        </select>
                       </div>
                     </div>
 

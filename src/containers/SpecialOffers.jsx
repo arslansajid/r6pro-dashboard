@@ -101,7 +101,7 @@ export default class Sites extends React.Component {
 
             <div className="col-sm-4 pull-right mobile-space">
                 <Link to="/special-offers/specialOffer_form">
-                  <button type="button" className="btn btn-success">Add new Special Offer</button>
+                  <button type="button" className="btn btn-success">Add new Site</button>
                 </Link>
             </div>
 
@@ -125,12 +125,12 @@ export default class Sites extends React.Component {
                   <td>{<img style={{height: '50px', width: '50px'}} src={site.image && site.image}/>}</td>
                   <td>{site.name}</td>
                   <td>
-                    <Link to={`/special-offers/edit_specialOffer/${site._id}`}>
+                    <Link to={`/special-offers/edit_specialOffer/${site.site_id}`}>
                       <span className="fa fa-edit" aria-hidden="true"></span>
                     </Link>
                   </td>
                   <td>
-                    <span className="fa fa-trash" style={{cursor: 'pointer'}} aria-hidden="true" onClick={() => this.deleteItem(site._id, index)}></span>
+                    <span className="fa fa-trash" style={{cursor: 'pointer'}} aria-hidden="true" onClick={() => this.deleteItem(site.site_id, index)}></span>
                   </td>
                 </tr>
                 )) :

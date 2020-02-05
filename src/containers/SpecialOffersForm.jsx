@@ -4,8 +4,10 @@ import axios from 'axios';
 import RichTextEditor from 'react-rte';
 import { Button } from 'reactstrap';
 import { API_END_POINT } from '../config';
+
 import Cookie from 'js-cookie';
 const token = Cookie.get('r6pro_access_token');
+const UUID = localStorage.getItem("UUID");
 
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -15,13 +17,13 @@ export default class UserForm extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      specialOffer: {
-        itemId: '',
-        isSpecialOffer: false,
-        specialOfferPrice: '',
+      site: {
+        map_id: '',
+        name: '',
+        image: '',
       },
-      items: [],
-      item: '',
+      maps: [],
+      map: '',
       description: RichTextEditor.createEmptyValue(),
     };
     // this.rteState = RichTextEditor.createEmptyValue();
@@ -31,52 +33,39 @@ export default class UserForm extends React.Component {
   }
 
   componentWillMount() {
-    axios.get(`${API_END_POINT}/api/items`, {headers: {"auth-token": token} })
-        .then(response => {
-          this.setState({
-            items: response.data.objects,
-          })
+    axios.get(`${API_END_POINT}/api/v1/maps`, {headers: {"Authentication": token, "UUID": UUID }} )
+      .then(response => {
+        this.setState({
+          maps: response.data,
         })
-        .catch(err => {
-          this.setState({
-            responseMessage: 'No Items Found...'
-          })
+      })
+      .catch(err => {
+        this.setState({
+          maps: []
         })
+      })
   }
 
   componentDidMount() {
     const { match } = this.props;
-    const requestParams = {
-      "itemId": match.params.specialOfferId,
-    }
-      if (match.params.specialOfferId)
-      axios.get(`${API_END_POINT}/api/items/one`, { params: requestParams, headers: {"auth-token" : token} })
+      if (match.params.specialOfferId) {
+      axios.get(`${API_END_POINT}/api/v1/sites/get_site?site_id=${match.params.specialOfferId}`, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           this.setState({
-            specialOffer: response.data.object[0],
-            item: response.data.object[0],
+            site: response.data
           });
         })
         .catch((error) => {
           window.alert(error)
         })
-    }
-
-    setCity(selectedCity) {
-      this.setState(prevState => ({
-        city: selectedCity,
-        specialOffer: {
-          ...prevState.specialOffer,
-          city_id: selectedCity.ID,
-        },
-      }));
+      }
     }
 
   setDescription(description) {
-    const { specialOffer } = this.state;
-    specialOffer.description = description.toString('html');
+    const { site } = this.state;
+    site.description = description.toString('html');
     this.setState({
-      specialOffer,
+      site,
       description,
     });
   }
@@ -84,46 +73,47 @@ export default class UserForm extends React.Component {
   handleInputChange(event) {
     const { value, name } = event.target;
 
-    const { specialOffer } = this.state;
-    specialOffer[name] = value;
-    this.setState({ specialOffer });
+    const { site } = this.state;
+    site[name] = value;
+    this.setState({ site });
   }
 
   postSpecialUser(event) {
     event.preventDefault();
     const { match, history } = this.props;
-    const { loading, specialOffer } = this.state;
-    const token = Cookie.get('r6pro_access_token');
+    const { loading, site } = this.state;
+
+    const fd = new FormData();
+    Object.keys(site).forEach((eachState, index) => {
+      fd.append(`${eachState}`, site[eachState]);
+    })
+
     if (!loading) {
         this.setState({ loading: true });
         if(match.params.specialOfferId) {
-          const requestParams = {
-            "itemId": specialOffer._id,
-            "specialOfferPrice": specialOffer.specialOfferPrice,
-          }
-          axios.post(`${API_END_POINT}/api/items/update`, requestParams, {headers: {"auth-token": token}})
+          axios.put(`${API_END_POINT}/api/v1/sites/update_site?site_id=${match.params.specialOfferId}`, fd, {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
-              window.alert(response.data.msg);
+              window.alert("UPDATED");
               this.setState({ loading: false });
             } else {
-              window.alert('ERROR:', response.data.error)
+              window.alert('ERROR:')
               this.setState({ loading: false });
             }
           })
           .catch((error) => {
             this.setState({ loading: false });
-            window.alert(error);
+            window.alert('ERROR:');
           })
         }
         else {
-          axios.post(`${API_END_POINT}/api/items/specialoffer`, specialOffer, {headers: {"auth-token": token}})
+          axios.post(`${API_END_POINT}/api/v1/sites`, fd, {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
-              window.alert(response.data.msg);
+              window.alert('SAVED !');
               this.setState({ loading: false });
             } else {
-              window.alert('ERROR:', response.data.error)
+              window.alert('ERROR:')
               this.setState({ loading: false });
             }
           })
@@ -135,18 +125,18 @@ export default class UserForm extends React.Component {
     }
   }
 
-  handleFile = (event) => {
-    this.setState({
-      profile_picture: event.target.files.length ? event.target.files[0] : '',
-    });
+  handleImages = (event) => {
+    const { site } = this.state;
+    site.image = event.target.files[0];
+    this.setState({ site });
   }
 
-  setItem(selectedItem) {
+  setMap(selectedItem) {
     this.setState(prevState => ({
-      item: selectedItem,
-      specialOffer: {
-        ...prevState.specialOffer,
-        itemId: selectedItem._id,
+      map: selectedItem,
+      site: {
+        ...prevState.site,
+        map_id: selectedItem.map_id,
       },
     }));
   }
@@ -156,58 +146,10 @@ export default class UserForm extends React.Component {
     const { match } = this.props;
     const {
       loading,
-      specialOffer,
-      item,
-      items,
+      site,
+      map,
+      maps,
     } = this.state;
-    const toolbarConfig = {
-      // Optionally specify the groups to display (displayed in the order listed).
-      display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'HISTORY_BUTTONS', 'BLOCK_TYPE_DROPDOWN'],
-      INLINE_STYLE_BUTTONS: [
-        {
-          label: 'Bold',
-          style: 'BOLD',
-          className: 'custom-css-class',
-        },
-        {
-          label: 'Italic',
-          style: 'ITALIC',
-        },
-        {
-          label: 'Underline',
-          style: 'UNDERLINE',
-        },
-      ],
-      BLOCK_TYPE_DROPDOWN: [
-        {
-          label: 'Normal',
-          style: 'unstyled',
-        },
-        {
-          label: 'Large Heading',
-          style: 'header-three',
-        },
-        {
-          label: 'Medium Heading',
-          style: 'header-four',
-        },
-        {
-          label: 'Small Heading',
-          style: 'header-five',
-        },
-      ],
-      BLOCK_TYPE_BUTTONS: [
-        {
-          label: 'UL',
-          style: 'unordered-list-item',
-        },
-        {
-          label: 'OL',
-          style: 'ordered-list-item',
-        },
-      ],
-    };
-    // console.log(this.state);
 
     return (
       <div className="row animated fadeIn">
@@ -217,7 +159,7 @@ export default class UserForm extends React.Component {
             <div className="col-md-12 col-sm-12">
               <div className="x_panel">
                 <div className="x_title">
-                  <h2>Enter Special Offer Details</h2>
+                  <h2>Enter Site Details</h2>
                 </div>
                 <div className="x_content">
                   <br />
@@ -228,13 +170,13 @@ export default class UserForm extends React.Component {
                     onSubmit={this.postSpecialUser}
                   >
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">Item</label>
+                      <label className="control-label col-md-3 col-sm-3">Map</label>
                       <div className="col-md-6 col-sm-6">
                         <Select
                           name="itemId"
-                          value={item}
-                          onChange={value => this.setItem(value)}
-                          options={items}
+                          value={map}
+                          onChange={value => this.setMap(value)}
+                          options={maps}
                           valueKey="_id"
                           labelKey="name"
                           clearable={false}
@@ -246,42 +188,37 @@ export default class UserForm extends React.Component {
                     </div>
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">Special Offer</label>
-                      <div className="col-md-6 col-sm-6">
+                    <label
+                      className="control-label col-md-3 col-sm-3"
+                    >Name
+                    </label>
+                    <div className="col-md-6 col-sm-6">
                       <input
-                        type="checkbox"
-                        name='recommended'
-                        checked={specialOffer.isSpecialOffer}
-                        onClick={() => {
-                          specialOffer.isSpecialOffer = !specialOffer.isSpecialOffer;
-                          this.setState({ specialOffer })
-                        }}
+                        required
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        value={site.name}
+                        onChange={this.handleInputChange}
                       />
-                      </div>
                     </div>
+                  </div>
+                  
+                  <div className="form-group row">
+                    <label className="control-label col-md-3 col-sm-3">Image</label>
+                    <div className="col-md-6 col-sm-6">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        name="gallery"
+                        className="form-control"
+                        onChange={this.handleImages}
+                        // multiple
+                        required
+                      />
+                    </div>
+                  </div>
 
-                    {
-                      specialOffer.isSpecialOffer
-                      ?
-                      <div className="form-group row">
-                      <label
-                        className="control-label col-md-3 col-sm-3"
-                      >Special Offer Price
-                      </label>
-                      <div className="col-md-6 col-sm-6">
-                        <input
-                          required
-                          type="text"
-                          name="specialOfferPrice"
-                          className="form-control"
-                          value={specialOffer.specialOfferPrice}
-                          onChange={this.handleInputChange}
-                        />
-                      </div>
-                    </div>
-                    :
-                    null
-                    }
                     <div className="ln_solid" />
                     <div className="form-group row">
                       <div className="col-md-6 col-sm-6 offset-md-3">

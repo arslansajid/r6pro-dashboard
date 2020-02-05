@@ -2,7 +2,7 @@ const routes = {
   '/': 'Home',
   '/strategies': 'Strategies',
   '/strategies/strategy-form': 'Strategy Form',
-  '/categories/edit-category': 'Edit Category',
+  '/strategies/edit-strategy': 'Edit Strategy',
 
   '/users': 'Users',
   '/users/user_form': 'User Form',
