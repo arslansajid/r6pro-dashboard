@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { API_END_POINT } from '../config';
 import Cookie from 'js-cookie';
 const token = Cookie.get('r6pro_access_token');
+const UUID = localStorage.getItem("UUID");
 
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -19,26 +20,42 @@ export default class OperatorForm extends React.Component {
       operator: {
         strategy_id: '',
         weapon_id: '',
-        operator_details_id: false,
-        sketch_image: false,
+        operator_details_id: "",
+        sketch_image: [],
         summary_images: [],
       },
-      category: "",
-      categories: []
+      strategy: "",
+      strategies: [],
+      operatorDetail: "",
+      operatorDetails: [],
+      weapon: "",
+      weapons: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.postItem = this.postItem.bind(this);
+    this.postOperator = this.postOperator.bind(this);
   }
 
   componentWillMount() {
-    axios.get(`${API_END_POINT}/api/categories`)
+    axios.get(`${API_END_POINT}/api/v1/strategies`, {headers: {"Authentication": token, "UUID": UUID }})
       .then(response => {
         this.setState({
-          categories: response.data.objects,
+          strategies: response.data,
         })
       })
-  }
+      axios.get(`${API_END_POINT}/api/v1/operator_details`, {headers: {"Authentication": token, "UUID": UUID }})
+      .then(response => {
+        this.setState({
+          operatorDetails: response.data,
+        })
+      })
+      axios.get(`${API_END_POINT}/api/v1/weapons`, {headers: {"Authentication": token, "UUID": UUID }})
+      .then(response => {
+        this.setState({
+          weapons: response.data,
+        })
+      })
+    }
 
   componentDidMount() {
     const { match } = this.props;
@@ -54,7 +71,7 @@ export default class OperatorForm extends React.Component {
       this.setState({
         operator: response.data.object[0],
       }, () => {
-        axios.get(`${API_END_POINT}/api/categories/one`, { params: {"categoryId": this.state.operator.categoryId}, headers: {"auth-token" : token} })
+        axios.get(`${API_END_POINT}/api/operators/one`, { params: {"categoryId": this.state.operator.categoryId}, headers: {"auth-token" : token} })
         .then(response => {
           this.setState({
             category: response.data.object[0],
@@ -63,99 +80,33 @@ export default class OperatorForm extends React.Component {
       });
     });
   }
-
-    fetchUsers() {
-        axios.get(`${API_END_POINT}/api/user/fetch`)
-        .then(response => {
-        this.setState({
-          users: response.data,
-        })
-      })
-    }
-
-    fetchHotels() {
-        axios.get(`${API_END_POINT}/api/hotel/fetch`)
-        .then(response => {
-        this.setState({
-          hotels: response.data,
-        })
-      })
-    }
-
-    fetchPackages() {
-        axios.get(`${API_END_POINT}/api/fetch/packagePage-fetch`)
-        .then(response => {
-        this.setState({
-          packages: response.data,
-        })
-      })
-    }
-
-    fetchExperiences() {
-      axios.get(`${API_END_POINT}/api/fetch/experience-fetch`)
-      .then(response => {
-      this.setState({
-        experiences: response.data,
-      })
-    })
-  }
-
-    setHotel = (selectedHotel) => {
-        this.setState(prevState => ({
-            hotel: selectedHotel,
-            operator: {
-                ...prevState.operator,
-                hotel_id: selectedHotel.ID,
-            },
-            }));
-        }
     
-    setPackage = (selectedPackage) => {
+  setWeapon = (selectedWeapon) => {
     this.setState(prevState => ({
-        pckg: selectedPackage,
-        operator: {
-            ...prevState.operator,
-            package_id: selectedPackage.ID,
-        },
-        }));
-    }
-
-    setUser = (selectedUser) => {
-        this.setState(prevState => ({
-            user: selectedUser,
-            operator: {
-                ...prevState.operator,
-                user_id: selectedUser.ID,
-                user_name: `${selectedUser.first_name} ${selectedUser.last_name}`,
-            },
-            }));
-        }
-
-    setExperience = (selectedExperience) => {
-      this.setState(prevState => ({
-          experience: selectedExperience,
-          operator: {
-              ...prevState.operator,
-              expereience_id: selectedExperience.ID,
-          },
-          }));
-      }
-
-  setDescription(description) {
-    const { operator } = this.state;
-    operator.comment = description.toString('html');
-    this.setState({
-      operator,
-      description,
-    });
-  }
-
-  setCategory(selectedCategory) {
-    this.setState(prevState => ({
-      category: selectedCategory,
+      weapon: selectedWeapon,
       operator: {
         ...prevState.operator,
-        categoryId: selectedCategory._id,
+        weapon_id: selectedWeapon.weapon_id,
+      },
+    }));
+  }
+
+  setOperator = (selectedOperator) => {
+    this.setState(prevState => ({
+      operatorDetail: selectedOperator,
+      operator: {
+        ...prevState.operator,
+        operator_details_id: selectedOperator.operator_detail_id,
+      }
+      }));
+    }
+
+  setStrategy(selectedStrategy) {
+    this.setState(prevState => ({
+      strategy: selectedStrategy,
+      operator: {
+        ...prevState.operator,
+        strategy_id: selectedStrategy.strategy_id,
       },
     }));
   }
@@ -172,25 +123,17 @@ export default class OperatorForm extends React.Component {
     this.setState({ gallery: event.target.files });
   }
 
-  postItem(event) {
+  postOperator(event) {
     event.preventDefault();
     const { match, history, location } = this.props;
     const { loading, operator } = this.state;
     if (!loading) {
       this.setState({ loading: true });
-      delete operator["isSpecialOffer"];
-      delete operator["specialOfferPrice"]
-
-      if(match.params.itemId) {
-        operator.itemId = operator._id
-        delete operator["_id"]
-        delete operator["date"]
-        delete operator["__v"]
-        this.setState({ operator });
-        axios.post(`${API_END_POINT}/api/operators/update`, operator, {headers: {"auth-token": token}})
+      if(match.params.operatorId) {
+        axios.post(`${API_END_POINT}/api/v1/operators/update`, operator, {headers: {"auth-token": token}})
         .then((response) => {
           if (response.data && response.status === 200) {
-            window.alert(response.data.msg);
+            window.alert("UPDATED!");
             this.setState({ loading: false });
           } else {
             window.alert('ERROR')
@@ -198,16 +141,22 @@ export default class OperatorForm extends React.Component {
           }
         });
       } else {
-        axios.post(`${API_END_POINT}/api/operators`, operator, {headers: {"auth-token": token}})
+        axios.post(`${API_END_POINT}/api/v1/operators`, operator, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           if (response.data && response.status === 200) {
-            window.alert(response.data.msg);
+            window.alert("SAVED!");
             this.setState({ loading: false });
           } else {
-            window.alert('ERROR', response.data.error)
+            window.alert('ERROR')
             this.setState({ loading: false });
           }
-        });
+        })
+        .catch((error) => {
+          this.setState({
+            loading: false,
+          })
+          window.alert('ERROR')
+        })
       }
     }
     }
@@ -215,9 +164,14 @@ export default class OperatorForm extends React.Component {
   render() {
     const {
       loading,
-      operator,
+      strategy,
       category,
-      categories,
+      strategies,
+      operator,
+      operatorDetail,
+      operatorDetails,
+      weapon,
+      weapons
     } = this.state;
     const { location } = this.props;
     console.log(this.state);
@@ -238,7 +192,7 @@ export default class OperatorForm extends React.Component {
                     id="demo-form2"
                     data-parsley-validate
                     className="form-horizontal form-label-left"
-                    onSubmit={this.postItem}
+                    onSubmit={this.postOperator}
                   >
 
                   <div className="form-group row">
@@ -246,9 +200,9 @@ export default class OperatorForm extends React.Component {
                     <div className="col-md-6 col-sm-6">
                       <Select
                         name="strategy_id"
-                        value={category}
-                        onChange={value => this.setCategory(value)}
-                        options={categories}
+                        value={strategy}
+                        onChange={value => this.setStrategy(value)}
+                        options={strategies}
                         valueKey="_id"
                         labelKey="name"
                         clearable={false}
@@ -258,7 +212,41 @@ export default class OperatorForm extends React.Component {
                     </div>
                   </div>
 
-                <div className="form-group row">
+                  <div className="form-group row">
+                    <label className="control-label col-md-3 col-sm-3">Operator Details</label>
+                    <div className="col-md-6 col-sm-6">
+                      <Select
+                        name="strategy_id"
+                        value={operatorDetail}
+                        onChange={value => this.setOperator(value)}
+                        options={operatorDetails}
+                        valueKey="_id"
+                        labelKey="name"
+                        clearable={false}
+                        backspaceRemoves={false}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group row">
+                    <label className="control-label col-md-3 col-sm-3">Weapon Details</label>
+                    <div className="col-md-6 col-sm-6">
+                      <Select
+                        name="weapon_id"
+                        value={weapon}
+                        onChange={value => this.setWeapon(value)}
+                        options={weapons}
+                        valueKey="weapon_id"
+                        labelKey="weapon_id"
+                        clearable={false}
+                        backspaceRemoves={false}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                {/* <div className="form-group row">
                       <label
                         className="control-label col-md-3 col-sm-3"
                       >weapon_id
@@ -267,34 +255,15 @@ export default class OperatorForm extends React.Component {
                         <input
                           required
                           type="text"
-                          name="name"
+                          name="weapon_id"
                           className="form-control"
-                          value={operator.name}
+                          value={operator.weapon_id}
                           onChange={this.handleInputChange}
                           // pattern="^[1-5]$"
                           // title="Operator should only range between 1 to 5"
                         />
                       </div>
-                    </div>
-
-                    <div className="form-group row">
-                      <label
-                        className="control-label col-md-3 col-sm-3"
-                      >operator_details_id
-                      </label>
-                      <div className="col-md-6 col-sm-6">
-                        <input
-                          required
-                          type="text"
-                          name="description"
-                          className="form-control"
-                          value={operator.description}
-                          onChange={this.handleInputChange}
-                          // pattern="^[1-5]$"
-                          // title="Operator should only range between 1 to 5"
-                        />
-                      </div>
-                    </div>
+                    </div> */}
 
                     <div className="form-group row">
                       <label className="control-label col-md-3 col-sm-3">sketch_image</label>
@@ -302,11 +271,11 @@ export default class OperatorForm extends React.Component {
                         <input
                           type="file"
                           accept="image/*"
-                          name="gallery"
+                          name="sketch_image"
                           className="form-control"
                           onChange={this.handleImages}
-                          // multiple
-                          required
+                          multiple
+                          // required
                         />
                       </div>
                     </div>
@@ -317,11 +286,11 @@ export default class OperatorForm extends React.Component {
                         <input
                           type="file"
                           accept="image/*"
-                          name="gallery"
+                          name="summary_images"
                           className="form-control"
                           onChange={this.handleImages}
                           multiple
-                          required
+                          // required
                         />
                       </div>
                     </div>

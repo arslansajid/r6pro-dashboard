@@ -16,6 +16,11 @@ export default {
       icon: 'icon-list',
     },
     {
+      name: 'Operator Details',
+      url: '/operator-details',
+      icon: 'icon-chart',
+    },
+    {
       name: 'Users',
       url: '/users',
       icon: 'icon-user',
@@ -30,11 +35,11 @@ export default {
       url: '/sites',
       icon: 'icon-diamond',
     },
-    // {
-    //   name: 'Orders',
-    //   url: '/orders',
-    //   icon: 'icon-handbag',
-    // },
+    {
+      name: 'Weapons',
+      url: '/weapons',
+      icon: 'icon-handbag',
+    },
     // {
     //   name: 'Gallery',
     //   url: '/gallery',

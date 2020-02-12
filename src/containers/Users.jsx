@@ -32,6 +32,7 @@ export default class Users extends React.Component {
         })
       })
   }
+  
   deleteUser(userId, index) {
     const requestParams = {
       "userId": userId,

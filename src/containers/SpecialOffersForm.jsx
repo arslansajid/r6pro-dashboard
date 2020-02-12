@@ -53,13 +53,17 @@ export default class UserForm extends React.Component {
         .then((response) => {
           this.setState({
             site: response.data
-          });
-        })
-        .catch((error) => {
-          window.alert(error)
+          }, () => {
+            axios.get(`${API_END_POINT}/api/v1/maps/get_map?map_id=${this.state.site.map_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            .then((response) => {
+              this.setState({
+                map: response.data
+              })
+          })
         })
       }
-    }
+    )}
+  }
 
   setDescription(description) {
     const { site } = this.state;
@@ -91,7 +95,17 @@ export default class UserForm extends React.Component {
     if (!loading) {
         this.setState({ loading: true });
         if(match.params.specialOfferId) {
-          axios.put(`${API_END_POINT}/api/v1/sites/update_site?site_id=${match.params.specialOfferId}`, fd, {headers: {"Authentication": token, "UUID": UUID }})
+          axios.put(
+            `${API_END_POINT}/api/v1/sites/update_site`,
+              null,
+              {
+                params: {
+                  "site_id": match.params.specialOfferId,
+                  "name": site.name,
+                },
+                headers: {"Authentication": token, "UUID": UUID }
+              })
+          // axios.put(`${API_END_POINT}/api/v1/sites/update_site?site_id=${match.params.specialOfferId}`, site , {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
               window.alert("UPDATED");
@@ -214,7 +228,7 @@ export default class UserForm extends React.Component {
                         className="form-control"
                         onChange={this.handleImages}
                         // multiple
-                        required
+                        // required
                       />
                     </div>
                   </div>
