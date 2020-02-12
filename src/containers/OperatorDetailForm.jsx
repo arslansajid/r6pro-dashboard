@@ -42,7 +42,7 @@ export default class OperatorDetailForm extends React.Component {
   componentDidMount() {
     const { match } = this.props;
     if(match.params.operatorDetailsId) {
-      axios.get(`${API_END_POINT}/api/v1/operator_details/one`, {headers: {"Authentication": token, "UUID": UUID }})
+      axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${match.params.operatorDetailsId}`, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           this.setState({
             operatorDetails: response.data,
@@ -123,16 +123,8 @@ export default class OperatorDetailForm extends React.Component {
 
     if (!loading) {
       this.setState({ loading: true });
-      delete operatorDetails["isSpecialOffer"];
-      delete operatorDetails["specialOfferPrice"]
-
-      if(match.params.operatorId) {
-        operatorDetails.itemId = operatorDetails._id
-        delete operatorDetails["_id"]
-        delete operatorDetails["date"]
-        delete operatorDetails["__v"]
-        this.setState({ operatorDetails });
-        axios.post(`${API_END_POINT}/api/v1/operators/update`, fd, {headers: {"auth-token": token}})
+      if(match.params.operatorDetailsId) {
+        axios.post(`${API_END_POINT}/api/v1/operator_details/update_operator_detail?operator_detail_id=${match.params.operatorDetailsId}`, fd, {headers: {"auth-token": token}})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert(response.data.msg);
@@ -141,7 +133,13 @@ export default class OperatorDetailForm extends React.Component {
             window.alert('ERROR')
             this.setState({ loading: false });
           }
-        });
+        })
+        .catch((error) => {
+          this.setState({
+            loading: false,
+          })
+          window.alert('ERROR')
+        })
       } else {
         axios.post(`${API_END_POINT}/api/v1/operator_details`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
