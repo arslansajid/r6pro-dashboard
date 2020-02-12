@@ -33,6 +33,12 @@ import Orders from '../containers/Orders';
 import Operators from './Operators';
 import OperatorForm from './OperatorForm';
 
+import OperatorDetails from './OperatorDetails';
+import OperatorDetailForm from './OperatorDetailForm';
+
+import Weapons from './Weapons';
+import WeaponForm from './WeaponForm';
+
 import Properties from './Properties';
 import PropertyForm from './PropertyForm';
 
@@ -148,9 +154,16 @@ class App extends React.Component {
                   <Route exact={true} path="/orders/edit_order/:orderId" component={OrderForm}/>
                   
                   <Route exact={true} path="/operators" component={Operators}/>
-                  {/* <Route exact={true} path="/items/:categoryId" component={Items}/> */}
                   <Route exact={true} path="/operators/edit-operator/:operatorId" component={OperatorForm}/>
                   <Route exact={true} path="/operators/operator-form" component={OperatorForm}/>
+
+                  <Route exact={true} path="/operator-details" component={OperatorDetails}/>
+                  <Route exact={true} path="/operator-details/edit-operator-details/:operatorDetailsId" component={OperatorDetailForm}/>
+                  <Route exact={true} path="/operator-details/operator-details-form" component={OperatorDetailForm}/>
+
+                  <Route exact={true} path="/weapons" component={Weapons}/>
+                  <Route exact={true} path="/weapon-details/edit-weapon/:weaponId" component={WeaponForm}/>
+                  <Route exact={true} path="/weapon-details/weapon-form" component={WeaponForm}/>
 
                   <Route exact={true} path="/properties" component={Properties}/>
                   <Route exact={true} path="properties/property-form" component={PropertyForm}/>
