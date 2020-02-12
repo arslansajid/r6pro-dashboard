@@ -37,18 +37,19 @@ export default class Sites extends React.Component {
       })
   }
 
-  deleteItem(specialOfferId, index) {
-    const requestParams = {
-      "itemId": specialOfferId,
-    }
-    const token = Cookie.get('r6pro_access_token');
+  deleteSite(siteId, index) {
     if(confirm("Are you sure you want to delete this site?")) {
-      axios.delete(`${API_END_POINT}/api/items/delete`, {data: requestParams, headers: {"auth-token": token}})
+      axios.delete(`${API_END_POINT}/api/v1/sites/destroy_site`, {
+        headers: {"Authentication": token, "UUID": UUID },
+        data: {
+          "site_id": siteId
+        }
+      })
         .then(response => {
           const sites = this.state.sites.slice();
           sites.splice(index, 1);
           this.setState({ sites });
-          window.alert(response.data.msg)
+          window.alert(response.data.message)
         });
     }
   }
@@ -130,7 +131,7 @@ export default class Sites extends React.Component {
                     </Link>
                   </td>
                   <td>
-                    <span className="fa fa-trash" style={{cursor: 'pointer'}} aria-hidden="true" onClick={() => this.deleteItem(site.site_id, index)}></span>
+                    <span className="fa fa-trash" style={{cursor: 'pointer'}} aria-hidden="true" onClick={() => this.deleteSite(site.site_id, index)}></span>
                   </td>
                 </tr>
                 )) :

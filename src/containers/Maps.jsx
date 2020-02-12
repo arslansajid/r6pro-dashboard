@@ -54,7 +54,7 @@ export default class Maps extends React.Component {
           const maps = this.state.maps.slice();
           maps.splice(index, 1);
           this.setState({ maps });
-          window.alert("MAP DELETED");
+          window.alert(response.data.message);
           console.log(response.data.message);
         })
         .catch(() => {
@@ -134,11 +134,11 @@ export default class Maps extends React.Component {
                   <td>{map.map_id}</td>
                   <td>{<img style={{height: '50px', width: '50px'}} src={map.image && map.image}/>}</td>
                   <td>{map.name}</td>
-                  {/* <td>
-                    <Link to={`/map/edit_popular/${map._id}`}>
+                  <td>
+                    <Link to={`/maps/edit-map/${map.map_id}`}>
                       <span className="fa fa-edit" aria-hidden="true"></span>
                     </Link>
-                  </td> */}
+                  </td>
                   <td>
                     <span className="fa fa-trash" style={{cursor: 'pointer'}} aria-hidden="true" onClick={() => this.deleteMap(map.map_id, index)}></span>
                   </td>
