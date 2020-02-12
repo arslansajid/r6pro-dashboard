@@ -119,7 +119,7 @@ export default class OperatorDetails extends React.Component {
 
   deleteItem(itemId, index) {
     if(confirm("Are you sure you want to delete this operator?")) {
-      axios.delete(`${API_END_POINT}/api/v1/operator_details/destroy_operator_detail`, {
+      axios.delete(`${API_END_POINT}/api/v1/operator_details/destroy_detail`, {
         headers: {"Authentication": token, "UUID": UUID },
         data: {
           "operator_detail_id": itemId
@@ -129,7 +129,7 @@ export default class OperatorDetails extends React.Component {
           const operatorDetails = this.state.operatorDetails.slice();
           operatorDetails.splice(index, 1);
           this.setState({ operatorDetails });
-          window.alert(response.data.msg);
+          window.alert(response.data.message);
         });
     }
   }
