@@ -44,11 +44,11 @@ export default class WeaponForm extends React.Component {
     const { match } = this.props;
     if(match.params.weaponId) {
       axios.get(`${API_END_POINT}/api/v1/weapons/get_weapon?weapon_id=${match.params.weaponId}`, {headers: {"Authentication": token, "UUID": UUID }})
-        .then((response) => {
-          this.setState({
-            weapon: response.data,
-          });
+      .then((response) => {
+        this.setState({
+          weapon: response.data,
         });
+      });
     }
   }
 

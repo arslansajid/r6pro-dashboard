@@ -59,26 +59,33 @@ export default class OperatorForm extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-    if(match.params.itemId) {
-      this.getItembyId();
-    }
-  }
-
-  getItembyId = () => {
-    const { match } = this.props;
-    axios.get(`${API_END_POINT}/api/operators/one`, { params: {"itemId": match.params.itemId}, headers: {"auth-token" : token} })
-    .then((response) => {
-      this.setState({
-        operator: response.data.object[0],
-      }, () => {
-        axios.get(`${API_END_POINT}/api/operators/one`, { params: {"categoryId": this.state.operator.categoryId}, headers: {"auth-token" : token} })
-        .then(response => {
+    if(match.params.operatorId) {
+      axios.get(`${API_END_POINT}/api/v1/operators/get_operator?operator_id=${match.params.operatorId}`, {headers: {"Authentication": token, "UUID": UUID }})
+        .then((response) => {
           this.setState({
-            category: response.data.object[0],
-          })
-        })
-      });
-    });
+            operator: response.data,
+          }, () => {
+            axios.get(`${API_END_POINT}/api/v1/strategies/get_strategy?strategy_id=${this.state.operator.strategy_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            .then((response) => {
+              this.setState({
+                strategy: response.data,
+              })
+            })
+            axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${this.state.operator.operator_detail_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            .then((response) => {
+              this.setState({
+                operatorDetail: response.data,
+              });
+            })
+            axios.get(`${API_END_POINT}/api/v1/weapons/get_weapon?weapon_id=${this.state.operator.weapon_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            .then((response) => {
+              this.setState({
+                weapon: response.data,
+              });
+            });
+          });
+        });
+    }
   }
     
   setWeapon = (selectedWeapon) => {
@@ -130,7 +137,7 @@ export default class OperatorForm extends React.Component {
     if (!loading) {
       this.setState({ loading: true });
       if(match.params.operatorId) {
-        axios.post(`${API_END_POINT}/api/v1/operators/update`, operator, {headers: {"auth-token": token}})
+        axios.post(`${API_END_POINT}/api/v1/operators/update_operator?operator_id=${match.params.operatorId}`, fd, {headers: {"auth-token": token}})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert("UPDATED!");
