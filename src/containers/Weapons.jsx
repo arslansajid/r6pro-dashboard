@@ -225,7 +225,7 @@ export default class Weapons extends React.Component {
                     <td>{weapon.primary_weapon}</td>
                     <td>{weapon.secondary_weapon}</td>
                     <td>
-                        <Link to={`/weapon-details/edit-weapon-details/${weapon.weapon_id}`}>
+                        <Link to={`/weapon-details/edit-weapon/${weapon.weapon_id}`}>
                           <span className="fa fa-edit" aria-hidden="true"></span>
                         </Link>
                       </td>
