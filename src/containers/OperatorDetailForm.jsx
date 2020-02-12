@@ -124,10 +124,10 @@ export default class OperatorDetailForm extends React.Component {
     if (!loading) {
       this.setState({ loading: true });
       if(match.params.operatorDetailsId) {
-        axios.post(`${API_END_POINT}/api/v1/operator_details/update_operator_detail?operator_detail_id=${match.params.operatorDetailsId}`, fd, {headers: {"auth-token": token}})
+        axios.post(`${API_END_POINT}/api/v1/operator_details/update_detail?operator_detail_id=${match.params.operatorDetailsId}`, fd, {headers: {"auth-token": token}})
         .then((response) => {
           if (response.data && response.status === 200) {
-            window.alert(response.data.msg);
+            window.alert("UPDATED!");
             this.setState({ loading: false });
           } else {
             window.alert('ERROR')
@@ -144,7 +144,7 @@ export default class OperatorDetailForm extends React.Component {
         axios.post(`${API_END_POINT}/api/v1/operator_details`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           if (response.data && response.status === 200) {
-            window.alert(response.data.msg);
+            window.alert("SAVED!");
             this.setState({ loading: false });
           } else {
             window.alert('ERROR', response.data.error)
@@ -236,25 +236,10 @@ export default class OperatorDetailForm extends React.Component {
                           className="form-control"
                           onChange={this.handleImages}
                           multiple
-                          required
+                          // required
                         />
                       </div>
                     </div>
-
-                    {/* <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">Favourite</label>
-                      <div className="col-md-6 col-sm-6">
-                      <input
-                        type="checkbox"
-                        name='recommended'
-                        checked={operatorDetails.favourite}
-                        onClick={() => {
-                          operatorDetails.favourite = !operatorDetails.favourite;
-                          this.setState({ operatorDetails })
-                        }}
-                      />
-                      </div>
-                    </div> */}
 
                     <div className="ln_solid" />
                     <div className="form-group row">
