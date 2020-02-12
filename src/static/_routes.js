@@ -33,5 +33,13 @@ const routes = {
   '/operators/edit-operators': 'Edit Operator',
   '/operators/operator-form': 'Operator Form',
 
+  '/operator-details': 'Operator Details',
+  '/operator-details/edit-operator-details': 'Edit Operator Details',
+  '/operator-details/operator-details-form': 'Operator Details Form',
+
+  '/weapons': 'Weapons',
+  '/weapon-details/edit-weapon': 'Edit Weapons',
+  '/weapon-details/weapon-form': 'Weapons Form',
+
 };
 export default routes;
