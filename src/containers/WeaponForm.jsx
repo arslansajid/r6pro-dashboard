@@ -42,8 +42,8 @@ export default class WeaponForm extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-    if(match.params.operatorDetailsId) {
-      axios.get(`${API_END_POINT}/api/v1/operator_details/one`, {headers: {"Authentication": token, "UUID": UUID }})
+    if(match.params.weaponId) {
+      axios.get(`${API_END_POINT}/api/v1/weapons/get_weapon?weapon_id=${match.params.weaponId}`, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           this.setState({
             weapon: response.data,
@@ -134,7 +134,13 @@ export default class WeaponForm extends React.Component {
             window.alert('ERROR')
             this.setState({ loading: false });
           }
-        });
+        })
+        .catch((error) => {
+          this.setState({
+            loading: false,
+          })
+          window.alert('ERROR')
+        })
       } else {
         axios.post(`${API_END_POINT}/api/v1/weapons`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
@@ -198,7 +204,7 @@ export default class WeaponForm extends React.Component {
                           type="text"
                           name="gadget1"
                           className="form-control"
-                          value={weapon.name}
+                          value={weapon.gadget1}
                           onChange={this.handleInputChange}
                         />
                       </div>
