@@ -28,25 +28,22 @@ export default class MapForm extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-    const requestParams = {
-      "popularId": match.params.popularId,
-    }
-      if (match.params.popularId)
-      axios.get(`${API_END_POINT}/api/users/one`, {params: requestParams})
-        .then((response) => {
-          this.setState({
-            map: response.data.object[0],
-            description: RichTextEditor.createValueFromString(response.data.description, 'html'),
-          }, () => {
-            // axios.get(`${API_END_POINT}/api/fetchById/city-fetchById/${this.state.map.city_id}`)
-            // .then((response) => {
-            //   this.setState({
-            //     city: response.data[0],
-            //   });
-            // });
-          });
+    if (match.params.mapId) {
+      axios.get(`${API_END_POINT}/api/v1/maps/get_map?map_id=${match.params.mapId}`, {headers: {"Authentication": token, "UUID": UUID }})
+      .then((response) => {
+        this.setState({
+          map: response.data,
+        }, () => {
+          // axios.get(`${API_END_POINT}/api/fetchById/city-fetchById/${this.state.map.city_id}`)
+          // .then((response) => {
+          //   this.setState({
+          //     city: response.data[0],
+          //   });
+          // });
         });
+      });
     }
+  }
 
     handleImages = (event) => {
       const { map } = this.state;
@@ -92,39 +89,35 @@ export default class MapForm extends React.Component {
     })
 
     if (!loading) {
-
-        this.setState({ loading: true });
-        if(match.params.popularId) {
-          map.popularId = map._id
-          this.setState({ map });
-          // axios.patch('/api/map/update', fd)
-          axios.post(`${API_END_POINT}/api/users/update`, fd, {headers: {"Authentication": token, "UUID": UUID }})
-          .then((response) => {
-            if (response.data && response.status === 200) {
-              window.alert(response.data.msg);
-              this.setState({ loading: false });
-            } else {
-              window.alert('ERROR:', response.data.error)
-              this.setState({ loading: false });
-            }
-          });
-        }
-        else {
-          axios.post(`${API_END_POINT}/api/v1/maps`, fd, {headers: {"Authentication": token, "UUID": UUID }})
-          .then((response) => {
-            if (response.data && response.status === 200) {
-              window.alert("MAP SAVED!");
-              this.setState({ loading: false });
-            } else {
-              window.alert('ERROR!')
-              this.setState({ loading: false });
-            }
-          })
-          .catch((err) => {
-            window.alert('ERROR:')
+      this.setState({ loading: true });
+      if(match.params.mapId) {
+        axios.put(`${API_END_POINT}/api/v1/maps/update_map?map_id=${match.params.mapId}`, fd, {headers: {"Authentication": token, "UUID": UUID }})
+        .then((response) => {
+          if (response.data && response.status === 200) {
+            window.alert("UPDATED!");
             this.setState({ loading: false });
-          })
-        }
+          } else {
+            window.alert('ERROR:', response.data.error)
+            this.setState({ loading: false });
+          }
+        });
+      }
+      else {
+        axios.post(`${API_END_POINT}/api/v1/maps`, fd, {headers: {"Authentication": token, "UUID": UUID }})
+        .then((response) => {
+          if (response.data && response.status === 200) {
+            window.alert("MAP SAVED!");
+            this.setState({ loading: false });
+          } else {
+            window.alert('ERROR!')
+            this.setState({ loading: false });
+          }
+        })
+        .catch((err) => {
+          window.alert('ERROR:')
+          this.setState({ loading: false });
+        })
+      }
     }
   }
 
