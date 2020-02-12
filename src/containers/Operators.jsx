@@ -132,6 +132,23 @@ export default class Operators extends React.Component {
     }
   }
 
+  deleteItem(itemId, index) {
+    if(confirm("Are you sure you want to delete this operator?")) {
+      axios.delete(`${API_END_POINT}/api/v1/operators/destroy_operator`, {
+        headers: {"Authentication": token, "UUID": UUID },
+        data: {
+          "operator_id": itemId
+        }
+      })
+        .then(response => {
+          const operatorDetails = this.state.operatorDetails.slice();
+          operatorDetails.splice(index, 1);
+          this.setState({ operatorDetails });
+          window.alert(response.data.message);
+        });
+    }
+  }
+
   handleSelect(page) {
     axios.get(`/api/area?offset=${(page-1)*10}`)
       .then(response => {
@@ -265,12 +282,12 @@ export default class Operators extends React.Component {
                     {/* <td>{operator.isPopular ? "Yes" : "No"}</td>
                     <td>{operator.favourite ? "Yes" : "No"}</td> */}
                     <td>
-                        <Link to={`/operators/edit-operator/${operator._id}`}>
+                        <Link to={`/operators/edit-operator/${operator.operator_id}`}>
                           <span className="fa fa-edit" aria-hidden="true"></span>
                         </Link>
                       </td>
                     <td>
-                        <span className="fa fa-trash" aria-hidden="true" style={{cursor: 'pointer'}} onClick={() => this.deleteItem(operator._id, index)}></span>
+                        <span className="fa fa-trash" aria-hidden="true" style={{cursor: 'pointer'}} onClick={() => this.deleteItem(operator.operator_id, index)}></span>
                       </td>
                   </tr>
                 )):

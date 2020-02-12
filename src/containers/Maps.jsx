@@ -39,9 +39,6 @@ export default class Maps extends React.Component {
   
   
   deleteMap(mapId, index) {
-    const requestParams = {
-      "map_id": mapId,
-    }
     const token = Cookie.get('r6pro_access_token');
     if(confirm("Are you sure you want to delete this map?")) {
       axios.delete(`${API_END_POINT}/api/v1/maps/destroy_map`, {
