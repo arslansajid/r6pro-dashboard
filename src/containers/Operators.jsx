@@ -33,7 +33,7 @@ export default class Operators extends React.Component {
     .then(response => {
       this.setState({
         operators: response.data,
-        responseMessage: 'No Strategies Found...'
+        responseMessage: 'No Operators Found...'
       })
     })
   }
