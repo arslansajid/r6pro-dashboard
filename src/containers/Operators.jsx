@@ -116,22 +116,7 @@ export default class Operators extends React.Component {
       })
     }
   }
-
-  deleteItem(itemId, index) {
-    const requestParams = {
-      "itemId": itemId,
-    }
-    if(confirm("Are you sure you want to delete this operator?")) {
-      axios.delete(`${API_END_POINT}/api/operators/delete`, {data: requestParams, headers: {"auth-token": token}})
-        .then(response => {
-          const operators = this.state.operators.slice();
-          operators.splice(index, 1);
-          this.setState({ operators });
-          window.alert(response.data.msg);
-        });
-    }
-  }
-
+  
   deleteItem(itemId, index) {
     if(confirm("Are you sure you want to delete this operator?")) {
       axios.delete(`${API_END_POINT}/api/v1/operators/destroy_operator`, {
@@ -141,9 +126,9 @@ export default class Operators extends React.Component {
         }
       })
         .then(response => {
-          const operatorDetails = this.state.operatorDetails.slice();
-          operatorDetails.splice(index, 1);
-          this.setState({ operatorDetails });
+          const operators = this.state.operators.slice();
+          operators.splice(index, 1);
+          this.setState({ operators });
           window.alert(response.data.message);
         });
     }
