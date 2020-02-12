@@ -196,7 +196,7 @@ export default class MapForm extends React.Component {
                           className="form-control"
                           onChange={this.handleImages}
                           // multiple
-                          required
+                          // required
                         />
                       </div>
                     </div>
