@@ -20,7 +20,7 @@ export default class OperatorForm extends React.Component {
       operator: {
         strategy_id: '',
         weapon_id: '',
-        operator_details_id: "",
+        operator_detail_id: "",
         sketch_image: [],
         summary_images: [],
       },
@@ -96,7 +96,7 @@ export default class OperatorForm extends React.Component {
       operatorDetail: selectedOperator,
       operator: {
         ...prevState.operator,
-        operator_details_id: selectedOperator.operator_detail_id,
+        operator_detail_id: selectedOperator.operator_detail_id,
       }
       }));
     }
