@@ -69,7 +69,8 @@
     "dev": "webpack -d --progress --watch --profile --env.dev",
     "start": "node server.js",
     "build": "webpack -p --progress --env.prod",
-    "clean": "rimraf ./build"
+    "clean": "rimraf ./build",
+    "local": "webpack-dev-server --progress --color --inline --env.dev --history-api-fallback"
   },
   "engines": {
     "npm": "6.11.3",

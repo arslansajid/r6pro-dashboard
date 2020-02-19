@@ -124,7 +124,7 @@ export default class OperatorDetailForm extends React.Component {
     if (!loading) {
       this.setState({ loading: true });
       if(match.params.operatorDetailsId) {
-        axios.post(`${API_END_POINT}/api/v1/operator_details/update_detail?operator_detail_id=${match.params.operatorDetailsId}`, fd, {headers: {"auth-token": token}})
+        axios.put(`${API_END_POINT}/api/v1/operator_details/update_detail?operator_detail_id=${match.params.operatorDetailsId}`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert("UPDATED!");
@@ -236,7 +236,7 @@ export default class OperatorDetailForm extends React.Component {
                           className="form-control"
                           onChange={this.handleImages}
                           multiple
-                          // required
+                          required
                         />
                       </div>
                     </div>

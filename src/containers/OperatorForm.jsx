@@ -23,13 +23,15 @@ export default class OperatorForm extends React.Component {
         operator_detail_id: "",
         sketch_image: [],
         summary_images: [],
+        strategy_maps_images: [],
       },
       strategy: "",
       strategies: [],
       operatorDetail: "",
       operatorDetails: [],
       weapon: "",
-      weapons: []
+      weapons: [],
+      strategyMapImages: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -71,7 +73,7 @@ export default class OperatorForm extends React.Component {
                 strategy: response.data,
               })
             })
-            axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${this.state.operator.operator_detail_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${this.state.operator.operator_id}`, {headers: {"Authentication": token, "UUID": UUID }})
             .then((response) => {
               this.setState({
                 operatorDetail: response.data,
@@ -127,13 +129,40 @@ export default class OperatorForm extends React.Component {
   }
 
   handleImages = (event) => {
-    this.setState({ gallery: event.target.files });
+    const { name } = event.target;
+    const { operator } = this.state;
+    operator[name] = event.target.files[0];
+    this.setState({ operator });
+  }
+
+  handleStrategyMapsImages = (event) => {
+    this.setState({ strategyMapImages: event.target.files });
   }
 
   postOperator(event) {
     event.preventDefault();
     const { match, history, location } = this.props;
-    const { loading, operator } = this.state;
+    const { loading, operator, strategyMapImages } = this.state;
+
+    const fd = new FormData();
+    let imgArray = [];
+
+    for (let index = 0; index < strategyMapImages.length; index += 1) {
+      imgArray.push(strategyMapImages[index]);
+    }
+    //   imgArray.forEach((img) => {
+    //   fd.append('gallery_images', img);
+    //   return img;
+    // });
+
+    operator.strategy_maps_images = imgArray;
+
+    console.log("imgArray", imgArray)
+    
+    Object.keys(operator).forEach((eachState, index) => {
+      fd.append(`${eachState}`, operator[eachState]);
+    })
+
     if (!loading) {
       this.setState({ loading: true });
       if(match.params.operatorId) {
@@ -273,7 +302,7 @@ export default class OperatorForm extends React.Component {
                     </div> */}
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">sketch_image</label>
+                      <label className="control-label col-md-3 col-sm-3">sketch image</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
@@ -288,7 +317,7 @@ export default class OperatorForm extends React.Component {
                     </div>
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">summary_images</label>
+                      <label className="control-label col-md-3 col-sm-3">summary images</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
@@ -296,6 +325,21 @@ export default class OperatorForm extends React.Component {
                           name="summary_images"
                           className="form-control"
                           onChange={this.handleImages}
+                          multiple
+                          // required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label className="control-label col-md-3 col-sm-3">Strategy maps mages</label>
+                      <div className="col-md-6 col-sm-6">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          name="strategy_maps_images"
+                          className="form-control"
+                          onChange={this.handleStrategyMapsImages}
                           multiple
                           // required
                         />

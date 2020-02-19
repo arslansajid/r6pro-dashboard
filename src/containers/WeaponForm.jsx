@@ -125,7 +125,7 @@ export default class WeaponForm extends React.Component {
     if (!loading) {
       this.setState({ loading: true });
       if(match.params.weaponId) {
-        axios.post(`${API_END_POINT}/api/v1/weapons/update_weapon`, fd, {headers: {"Authentication": token, "UUID": UUID }})
+        axios.put(`${API_END_POINT}/api/v1/weapons/update_weapon`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert("UPDATED");
