@@ -18,6 +18,7 @@ export default class WeaponForm extends React.Component {
     this.state = {
       loading: false,
       weapon: {
+        name: "",
         gadget1: '',
         gadget2: '',
         primary_weapon: '',
@@ -192,8 +193,25 @@ export default class WeaponForm extends React.Component {
                     onSubmit={this.postWeapon}
                   >
 
+                  <div className="form-group row">
+                    <label
+                      className="control-label col-md-3 col-sm-3"
+                    >First Name
+                    </label>
+                    <div className="col-md-6 col-sm-6">
+                      <input
+                        required
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        value={weapon.name}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                  </div>
 
-                <div className="form-group row">
+
+                  <div className="form-group row">
                       <label
                         className="control-label col-md-3 col-sm-3"
                       >Gadget 1
