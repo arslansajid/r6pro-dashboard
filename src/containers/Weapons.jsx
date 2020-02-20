@@ -206,6 +206,7 @@ export default class Weapons extends React.Component {
                 <tr>
                   <th>Sr. #</th>
                   <th>Weapon Detail Id</th>
+                  <th>Weapon Name</th>
                   {/* <th>Logo</th> */}
                   <th>Gadget 1</th>
                   <th>Gadget 2</th>
@@ -219,6 +220,7 @@ export default class Weapons extends React.Component {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{weapon.weapon_id}</td>
+                    <td>{weapon.name}</td>
                     {/* <td>{<img style={{height: '50px', width: '50px'}} src={weapon.logo && weapon.logo} />}</td> */}
                     <td>{weapon.gadget1}</td>
                     <td>{weapon.gadget2}</td>

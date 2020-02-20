@@ -196,7 +196,7 @@ export default class WeaponForm extends React.Component {
                   <div className="form-group row">
                     <label
                       className="control-label col-md-3 col-sm-3"
-                    >First Name
+                    >Name
                     </label>
                     <div className="col-md-6 col-sm-6">
                       <input
