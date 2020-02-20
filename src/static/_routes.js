@@ -3,6 +3,7 @@ const routes = {
   '/strategies': 'Strategies',
   '/strategies/strategy-form': 'Strategy Form',
   '/strategies/edit-strategy': 'Edit Strategy',
+  '/strategies/operator': 'Strategy Operator',
 
   '/users': 'Users',
   '/users/user_form': 'User Form',
