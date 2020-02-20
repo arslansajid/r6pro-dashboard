@@ -131,7 +131,7 @@ class App extends React.Component {
                   <Route exact={true} path="/strategies" component={Strategies}/>
                   <Route exact={true} path="/strategies/strategy-form" component={StrategyForm}/>
                   <Route exact={true} path="/strategies/edit-strategy/:strategyId" component={StrategyForm}/>
-                  {/* <Route path="/categories/category/:categoryId/items" component={Items}/> */}
+                  <Route path="/strategies/operator/:strategyId" component={Operators}/>
 
                   <Route exact={true} path="/users" component={Users}/>
                   <Route exact={true} path='/users/user_form' component={UserForm}/>
