@@ -175,13 +175,13 @@ export default class OperatorForm extends React.Component {
       fd.append(`${eachState}`, operator[eachState]);
     })
 
-    strategyMapImagesArray.forEach((img) => {
-      fd.append('strategy_map_images', img);
+    strategyMapImagesArray.forEach((img, index) => {
+      fd.append(`strategy_map_images[${index}]`, img);
       return img;
     });
 
-    summaryImagesArray.forEach((img) => {
-      fd.append('summary_images', img);
+    summaryImagesArray.forEach((img, index) => {
+      fd.append(`summary_images[${index}]`, img);
       return img;
     });
 
