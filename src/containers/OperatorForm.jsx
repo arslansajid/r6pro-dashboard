@@ -22,8 +22,8 @@ export default class OperatorForm extends React.Component {
         weapon_id: '',
         operator_detail_id: "",
         sketch_image: [],
-        summary_images: [],
-        strategy_maps_images: [],
+        // summary_images: [],
+        // strategy_map_images: [],
       },
       strategy: "",
       strategies: [],
@@ -31,7 +31,8 @@ export default class OperatorForm extends React.Component {
       operatorDetails: [],
       weapon: "",
       weapons: [],
-      strategyMapImages: []
+      strategyMapImages: [],
+      summaryImages: [],
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -129,39 +130,60 @@ export default class OperatorForm extends React.Component {
   }
 
   handleImages = (event) => {
-    const { name } = event.target;
     const { operator } = this.state;
-    operator[name] = event.target.files[0];
+    operator.sketch_image = event.target.files[0];
     this.setState({ operator });
   }
 
   handleStrategyMapsImages = (event) => {
-    this.setState({ strategyMapImages: event.target.files });
+    const { operator } = this.state;
+    // operator["strategy_map_images"] = event.target.files;
+    this.setState({ strategyMapImages: event.target.files, operator });
+  }
+
+  handleSummaryImages = (event) => {
+    const { operator } = this.state;
+    // operator["summary_images"] = event.target.files;
+    this.setState({ summaryImages: event.target.files, operator });
   }
 
   postOperator(event) {
     event.preventDefault();
     const { match, history, location } = this.props;
-    const { loading, operator, strategyMapImages } = this.state;
+    const { loading, operator, strategyMapImages, summaryImages } = this.state;
 
     const fd = new FormData();
-    let imgArray = [];
+    let strategyMapImagesArray = [];
+    let summaryImagesArray = [];
 
     for (let index = 0; index < strategyMapImages.length; index += 1) {
-      imgArray.push(strategyMapImages[index]);
+      strategyMapImagesArray.push(strategyMapImages[index]);
     }
-    //   imgArray.forEach((img) => {
-    //   fd.append('gallery_images', img);
-    //   return img;
-    // });
 
-    operator.strategy_maps_images = imgArray;
+    for (let index = 0; index < summaryImages.length; index += 1) {
+      summaryImagesArray.push(summaryImages[index]);
+    }
 
-    console.log("imgArray", imgArray)
+    // operator.strategy_map_images = strategyMapImagesArray;
+    // operator.summary_images = strategyMapImagesArray;
+
+    // console.log("strategyMapImagesArray", strategyMapImagesArray)
+    // console.log("summaryImagesArray", summaryImagesArray)
+    
     
     Object.keys(operator).forEach((eachState, index) => {
       fd.append(`${eachState}`, operator[eachState]);
     })
+
+    strategyMapImagesArray.forEach((img) => {
+      fd.append('strategy_map_images', img);
+      return img;
+    });
+
+    summaryImagesArray.forEach((img) => {
+      fd.append('summary_images', img);
+      return img;
+    });
 
     if (!loading) {
       this.setState({ loading: true });
@@ -177,7 +199,7 @@ export default class OperatorForm extends React.Component {
           }
         });
       } else {
-        axios.post(`${API_END_POINT}/api/v1/operators`, operator, {headers: {"Authentication": token, "UUID": UUID }})
+        axios.post(`${API_END_POINT}/api/v1/operators`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert("SAVED!");
@@ -195,7 +217,7 @@ export default class OperatorForm extends React.Component {
         })
       }
     }
-    }
+  }
 
   render() {
     const {
@@ -274,7 +296,7 @@ export default class OperatorForm extends React.Component {
                         onChange={value => this.setWeapon(value)}
                         options={weapons}
                         valueKey="weapon_id"
-                        labelKey="weapon_id"
+                        labelKey="name"
                         clearable={false}
                         backspaceRemoves={false}
                         required
@@ -324,7 +346,8 @@ export default class OperatorForm extends React.Component {
                           accept="image/*"
                           name="summary_images"
                           className="form-control"
-                          onChange={this.handleImages}
+                          // onChange={this.handleImages}
+                          onChange={this.handleSummaryImages}
                           multiple
                           // required
                         />
@@ -332,14 +355,15 @@ export default class OperatorForm extends React.Component {
                     </div>
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">Strategy maps mages</label>
+                      <label className="control-label col-md-3 col-sm-3">Strategy maps images</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
                           accept="image/*"
-                          name="strategy_maps_images"
+                          name="strategy_map_images"
                           className="form-control"
                           onChange={this.handleStrategyMapsImages}
+                          // onChange={this.handleImages}
                           multiple
                           // required
                         />
