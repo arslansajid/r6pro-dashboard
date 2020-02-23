@@ -22,8 +22,8 @@ export default class OperatorForm extends React.Component {
         weapon_id: '',
         operator_detail_id: "",
         sketch_image: [],
-        summary_images: [],
-        strategy_map_images: [],
+        // summary_images: [],
+        // strategy_map_images: [],
       },
       strategy: "",
       strategies: [],
@@ -137,13 +137,13 @@ export default class OperatorForm extends React.Component {
 
   handleStrategyMapsImages = (event) => {
     const { operator } = this.state;
-    operator["strategy_map_images"] = event.target.files;
+    // operator["strategy_map_images"] = event.target.files;
     this.setState({ strategyMapImages: event.target.files, operator });
   }
 
   handleSummaryImages = (event) => {
     const { operator } = this.state;
-    operator["summary_images"] = event.target.files;
+    // operator["summary_images"] = event.target.files;
     this.setState({ summaryImages: event.target.files, operator });
   }
 
@@ -164,29 +164,26 @@ export default class OperatorForm extends React.Component {
       summaryImagesArray.push(summaryImages[index]);
     }
 
-    operator.strategy_map_images = strategyMapImagesArray;
-    operator.summary_images = strategyMapImagesArray;
+    // operator.strategy_map_images = strategyMapImagesArray;
+    // operator.summary_images = strategyMapImagesArray;
 
-    console.log("strategyMapImagesArray", strategyMapImagesArray)
-    console.log("summaryImagesArray", summaryImagesArray)
-
-    console.log("operator.strategy_map_images", operator.strategy_map_images)
-    console.log("operator.summary_images", operator.summary_images)
+    // console.log("strategyMapImagesArray", strategyMapImagesArray)
+    // console.log("summaryImagesArray", summaryImagesArray)
     
     
     Object.keys(operator).forEach((eachState, index) => {
       fd.append(`${eachState}`, operator[eachState]);
     })
 
-    // strategyMapImagesArray.forEach((img) => {
-    //   fd.append('strategy_map_images', img);
-    //   return img;
-    // });
+    strategyMapImagesArray.forEach((img) => {
+      fd.append('strategy_map_images', img);
+      return img;
+    });
 
-    // summaryImagesArray.forEach((img) => {
-    //   fd.append('summary_images', img);
-    //   return img;
-    // });
+    summaryImagesArray.forEach((img) => {
+      fd.append('summary_images', img);
+      return img;
+    });
 
     if (!loading) {
       this.setState({ loading: true });
