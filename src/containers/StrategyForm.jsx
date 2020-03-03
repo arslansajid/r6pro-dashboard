@@ -7,6 +7,7 @@ import { API_END_POINT } from '../config';
 import Cookie from 'js-cookie';
 const UUID = localStorage.getItem("UUID");
 
+// import Select from 'react-select';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
@@ -23,9 +24,11 @@ export default class StrategyForm extends React.Component {
         strategy_type: "",
         image: "",
       },
+      selectedOperators: [],
       gallery: '',
       site: '',
       sites: [],
+      operators: [],
       description: RichTextEditor.createEmptyValue(),
     };
     // this.rteState = RichTextEditor.createEmptyValue();
@@ -41,6 +44,12 @@ export default class StrategyForm extends React.Component {
           sites: response.data,
         })
       })
+    axios.get(`${API_END_POINT}/api/v1/operators`, {headers: {"Authentication": token, "UUID": UUID }})
+    .then(response => {
+      this.setState({
+        operators: response.data,
+      })
+    })
   }
 
   componentDidMount() {
@@ -104,11 +113,15 @@ export default class StrategyForm extends React.Component {
   postStrategy(event) {
     event.preventDefault();
     const { match, history } = this.props;
-    const { loading, strategy, gallery } = this.state;
+    const { loading, strategy, gallery, selectedOperators } = this.state;
 
     const fd = new FormData();
     Object.keys(strategy).forEach((eachState, index) => {
       fd.append(`${eachState}`, strategy[eachState]);
+    })
+
+    selectedOperators.split(',').forEach((operator, index) => {
+      fd.append(`operator_array[${index}]`, operator);
     })
 
     if (!loading) {
@@ -167,6 +180,11 @@ export default class StrategyForm extends React.Component {
       }
     }
 
+    handleSelectChange = (value) => {
+      console.log('You\'ve selected:', value);
+      this.setState({ selectedOperators: value });
+    }
+
   render() {
     console.log('this.state', this.state);
     const {
@@ -175,6 +193,8 @@ export default class StrategyForm extends React.Component {
       sites,
       site,
       description,
+      operators,
+      selectedOperators,
     } = this.state;
 
     return (
@@ -229,22 +249,22 @@ export default class StrategyForm extends React.Component {
                       </div>
                     </div>
 
-                    {/* <div className="form-group row">
-                      <label
-                        className="control-label col-md-3 col-sm-3"
-                      >Site ID
-                      </label>
+                    <div className="form-group row">
+                      <label className="control-label col-md-3 col-sm-3">Select 5 Operators</label>
                       <div className="col-md-6 col-sm-6">
-                        <input
-                          required
-                          type="text"
-                          name="site_id"
-                          className="form-control"
-                          value={strategy.site_id}
-                          onChange={this.handleInputChange}
-                        />
+                      <Select
+                        multi
+                        onChange={(val) => this.handleSelectChange(val)}
+                        options={operators}
+                        placeholder="Select your favourite(s)"
+                        rtl={false}
+                        simpleValue
+                        value={selectedOperators}
+                        valueKey="operator_id"
+                        labelKey="name"
+                      />
                       </div>
-                    </div> */}
+                    </div>
 
                     <div className="form-group row">
                       <label className="control-label col-md-3 col-sm-3">Map Image</label>
