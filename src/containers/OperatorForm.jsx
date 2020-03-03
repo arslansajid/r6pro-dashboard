@@ -18,7 +18,7 @@ export default class OperatorForm extends React.Component {
     this.state = {
       loading: false,
       operator: {
-        strategy_id: '',
+        // strategy_id: '',
         weapon_id: '',
         operator_detail_id: "",
         sketch_image: [],
@@ -68,12 +68,12 @@ export default class OperatorForm extends React.Component {
           this.setState({
             operator: response.data,
           }, () => {
-            axios.get(`${API_END_POINT}/api/v1/strategies/get_strategy?strategy_id=${this.state.operator.strategy_id}`, {headers: {"Authentication": token, "UUID": UUID }})
-            .then((response) => {
-              this.setState({
-                strategy: response.data,
-              })
-            })
+            // axios.get(`${API_END_POINT}/api/v1/strategies/get_strategy?strategy_id=${this.state.operator.strategy_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            // .then((response) => {
+            //   this.setState({
+            //     strategy: response.data,
+            //   })
+            // })
             axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${this.state.operator.operator_id}`, {headers: {"Authentication": token, "UUID": UUID }})
             .then((response) => {
               this.setState({
@@ -111,15 +111,15 @@ export default class OperatorForm extends React.Component {
       }));
     }
 
-  setStrategy(selectedStrategy) {
-    this.setState(prevState => ({
-      strategy: selectedStrategy,
-      operator: {
-        ...prevState.operator,
-        strategy_id: selectedStrategy.strategy_id,
-      },
-    }));
-  }
+  // setStrategy(selectedStrategy) {
+  //   this.setState(prevState => ({
+  //     strategy: selectedStrategy,
+  //     operator: {
+  //       ...prevState.operator,
+  //       strategy_id: selectedStrategy.strategy_id,
+  //     },
+  //   }));
+  // }
 
   handleInputChange(event) {
     const { value, name } = event.target;
@@ -253,7 +253,7 @@ export default class OperatorForm extends React.Component {
                     onSubmit={this.postOperator}
                   >
 
-                  <div className="form-group row">
+                  {/* <div className="form-group row">
                     <label className="control-label col-md-3 col-sm-3">Strategy</label>
                     <div className="col-md-6 col-sm-6">
                       <Select
@@ -268,13 +268,13 @@ export default class OperatorForm extends React.Component {
                         required
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="form-group row">
                     <label className="control-label col-md-3 col-sm-3">Operator Details</label>
                     <div className="col-md-6 col-sm-6">
                       <Select
-                        name="strategy_id"
+                        name="operator_id"
                         value={operatorDetail}
                         onChange={value => this.setOperator(value)}
                         options={operatorDetails}
