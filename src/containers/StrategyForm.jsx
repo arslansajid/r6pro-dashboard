@@ -256,7 +256,7 @@ export default class StrategyForm extends React.Component {
                         multi
                         onChange={(val) => this.handleSelectChange(val)}
                         options={operators}
-                        placeholder="Select your favourite(s)"
+                        placeholder="Select at least 5"
                         rtl={false}
                         simpleValue
                         value={selectedOperators}
