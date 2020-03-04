@@ -138,8 +138,8 @@ class App extends React.Component {
                   <Route exact={true} path="/users/edit_user/:userId" component={UserForm}/>
 
                   <Route exact={true} path="/sites" component={SpecialOffers}/>
-                  <Route exact={true} path="/special-offers/specialOffer_form" component={SpecialOffersForm}/>
-                  <Route exact={true} path="/special-offers/edit_specialOffer/:specialOfferId" component={SpecialOffersForm}/>
+                  <Route exact={true} path="/sites/sites-form" component={SpecialOffersForm}/>
+                  <Route exact={true} path="/sites/edit-site/:siteId" component={SpecialOffersForm}/>
 
                   <Route exact={true} path="/maps" component={Maps}/>
                   <Route exact={true} path="/maps/map-form" component={MapForm}/>
