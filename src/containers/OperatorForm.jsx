@@ -324,7 +324,7 @@ export default class OperatorForm extends React.Component {
                     </div> */}
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">sketch image</label>
+                      <label className="control-label col-md-3 col-sm-3">Sketch Image</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
@@ -339,7 +339,7 @@ export default class OperatorForm extends React.Component {
                     </div>
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">summary images</label>
+                      <label className="control-label col-md-3 col-sm-3">Summary Images (Min 3)</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
@@ -355,7 +355,7 @@ export default class OperatorForm extends React.Component {
                     </div>
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">Strategy maps images</label>
+                      <label className="control-label col-md-3 col-sm-3">Strategy Maps Images (Min 3)</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
