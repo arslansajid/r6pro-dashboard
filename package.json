@@ -12,7 +12,7 @@
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-1": "^6.24.1",
-    "bootstrap": "4.0.0",
+    "bootstrap": "4.4.1",
     "chart.js": "2.7.1",
     "compression-webpack-plugin": "^1.1.11",
     "copy-webpack-plugin": "4.3.1",
