@@ -115,6 +115,11 @@ export default class StrategyForm extends React.Component {
     const { match, history } = this.props;
     const { loading, strategy, gallery, selectedOperators } = this.state;
 
+    if(selectedOperators.split(',').length < 5) {
+      window.alert('Please Select at least 5 operators!');
+      return;
+    }
+
     const fd = new FormData();
     Object.keys(strategy).forEach((eachState, index) => {
       fd.append(`${eachState}`, strategy[eachState]);
