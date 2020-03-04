@@ -40,7 +40,7 @@
     "react-chartjs": "^0.8.0",
     "react-chartjs-2": "2.7.0",
     "react-dates": "^16.3.6",
-    "react-dom": "16.2.0",
+    "react-dom": "16.13.0",
     "react-multidrag": "^1.0.2",
     "react-redux": "^5.0.7",
     "react-router": "^3.0.2",
