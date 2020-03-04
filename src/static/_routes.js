@@ -9,9 +9,9 @@ const routes = {
   '/users/user_form': 'User Form',
   '/users/edit_user': 'Edit User',
   
-  '/special-offers': 'Special Offers',
-  '/special-offers/specialOffer_form': 'Special Offers Form',
-  '/special-offers/edit_specialOffer': 'Edit Special Offers',
+  '/sites': 'Sites',
+  '/sites/sites-form': 'Site Form',
+  '/sites/edit-site': 'Edit Site',
 
   '/maps': 'Maps',
   '/maps/map-form': 'Map Form',
