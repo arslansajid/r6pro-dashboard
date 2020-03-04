@@ -3,14 +3,15 @@ const routes = {
   '/strategies': 'Strategies',
   '/strategies/strategy-form': 'Strategy Form',
   '/strategies/edit-strategy': 'Edit Strategy',
+  '/strategies/operator': 'Strategy Operator',
 
   '/users': 'Users',
   '/users/user_form': 'User Form',
   '/users/edit_user': 'Edit User',
   
-  '/special-offers': 'Special Offers',
-  '/special-offers/specialOffer_form': 'Special Offers Form',
-  '/special-offers/edit_specialOffer': 'Edit Special Offers',
+  '/sites': 'Sites',
+  '/sites/sites-form': 'Site Form',
+  '/sites/edit-site': 'Edit Site',
 
   '/maps': 'Maps',
   '/maps/map-form': 'Map Form',

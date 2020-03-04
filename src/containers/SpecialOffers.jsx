@@ -101,7 +101,7 @@ export default class Sites extends React.Component {
             </div> */}
 
             <div className="col-sm-4 pull-right mobile-space">
-                <Link to="/special-offers/specialOffer_form">
+                <Link to="/sites/sites-form">
                   <button type="button" className="btn btn-success">Add new Site</button>
                 </Link>
             </div>
@@ -126,7 +126,7 @@ export default class Sites extends React.Component {
                   <td>{<img style={{height: '50px', width: '50px'}} src={site.image && site.image}/>}</td>
                   <td>{site.name}</td>
                   <td>
-                    <Link to={`/special-offers/edit_specialOffer/${site.site_id}`}>
+                    <Link to={`/sites/edit-site/${site.site_id}`}>
                       <span className="fa fa-edit" aria-hidden="true"></span>
                     </Link>
                   </td>

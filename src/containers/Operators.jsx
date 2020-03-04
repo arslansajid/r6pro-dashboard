@@ -28,14 +28,24 @@ export default class Operators extends React.Component {
   }
 
   componentWillMount() {
-    // this.fetchItems(this.state.status);
-    axios.get(`${API_END_POINT}/api/v1/operators`, {headers: {"Authentication": token, "UUID": UUID }})
-    .then(response => {
-      this.setState({
-        operators: response.data,
-        responseMessage: 'No Operators Found...'
+    const { match } = this.props;
+    if(match.params.strategyId) {
+      axios.get(`${API_END_POINT}/api/v1/strategies/${match.params.strategyId}/get_operators`, {headers: {"Authentication": token, "UUID": UUID }})
+      .then(response => {
+        this.setState({
+          operators: response.data,
+          responseMessage: 'No Operators For Strategy Found...'
+        })
       })
-    })
+    } else {
+      axios.get(`${API_END_POINT}/api/v1/operators`, {headers: {"Authentication": token, "UUID": UUID }})
+      .then(response => {
+        this.setState({
+          operators: response.data,
+          responseMessage: 'No Operators Found...'
+        })
+      })
+    }
   }
 
   fetchItems = (type) => {
@@ -116,18 +126,20 @@ export default class Operators extends React.Component {
       })
     }
   }
-
+  
   deleteItem(itemId, index) {
-    const requestParams = {
-      "itemId": itemId,
-    }
     if(confirm("Are you sure you want to delete this operator?")) {
-      axios.delete(`${API_END_POINT}/api/operators/delete`, {data: requestParams, headers: {"auth-token": token}})
+      axios.delete(`${API_END_POINT}/api/v1/operators/destroy_operator`, {
+        headers: {"Authentication": token, "UUID": UUID },
+        data: {
+          "operator_id": itemId
+        }
+      })
         .then(response => {
           const operators = this.state.operators.slice();
           operators.splice(index, 1);
           this.setState({ operators });
-          window.alert(response.data.msg);
+          window.alert(response.data.message);
         });
     }
   }
@@ -163,7 +175,7 @@ export default class Operators extends React.Component {
         <div className="col-12">
           <div className="row space-1">
             <div className="col-sm-4">
-              <h3>List of Operators{/* match.params.categoryId ? `for category: ${match.params.categoryId}` : null */}</h3>
+              <h3>List of Operators {match.params.strategyId ? `for Strategy` : null}</h3>
               </div>
               <div  className="col-sm-4">
                 <div className='input-group'>
@@ -185,7 +197,7 @@ export default class Operators extends React.Component {
                   </span>
                 </div>
               </div>
-              {!match.params.categoryId ? 
+              {!match.params.strategyId ? 
                 <div className="col-sm-4 pull-right mobile-space">
                   <Link to={`/operators/operator-form`}>
                     <button type="button" className="btn btn-success">Add new Operator</button>
@@ -194,44 +206,7 @@ export default class Operators extends React.Component {
               : null}
           </div>
 
-          <div>         
-            {/* <div className="row justify-content-between">
-            <div className="float-left col-sm-6 space-1">
-            <button
-                type="button"
-                style={{
-                  marginRight: 5,
-                  borderRadius: 0,
-                }}
-                className={`${status === 'All' ? 'btn-primary' : ''} btn btn-default`}
-                onClick={() => this.fetchItems('All')}
-              >All
-              </button>
-              <button
-                type="button"
-                style={{
-                  marginLeft: 5,
-                  marginRight: 5,
-                  borderRadius: 0,
-                }}
-                className={`${status === 'Accepted' ? 'btn-primary' : ''} btn btn-default`}
-                onClick={() => this.fetchItems('Accepted')}
-              >Active
-              </button>
-              <button
-                type="button"
-                style={{
-                  marginLeft: 5,
-                  borderRadius: 0,
-                }}
-                className={`${status === 'Rejected' ? 'btn-primary' : ''} btn btn-default`}
-                onClick={() => this.fetchItems('Rejected')}
-              >Disabled
-              </button>
-            </div>
-          </div> */}
-
-          
+          <div>          
           <div className="table-responsive">
             <table className="table table-striped">
               <thead>
@@ -262,15 +237,19 @@ export default class Operators extends React.Component {
                     <td>{operator.primary_weapon ? operator.primary_weapon : "-"}</td>
                     <td>{operator.secondary_weapon ? operator.secondary_weapon : "-"}</td>
                     <td>{operator.description}</td>
-                    {/* <td>{operator.isPopular ? "Yes" : "No"}</td>
-                    <td>{operator.favourite ? "Yes" : "No"}</td> */}
+                    {
+                    !match.params.strategyId
+                    ?
                     <td>
-                        <Link to={`/operators/edit-operator/${operator._id}`}>
+                        <Link to={`/operators/edit-operator/${operator.operator_id}`}>
                           <span className="fa fa-edit" aria-hidden="true"></span>
                         </Link>
                       </td>
+                    :
+                    null
+                    }
                     <td>
-                        <span className="fa fa-trash" aria-hidden="true" style={{cursor: 'pointer'}} onClick={() => this.deleteItem(operator._id, index)}></span>
+                        <span className="fa fa-trash" aria-hidden="true" style={{cursor: 'pointer'}} onClick={() => this.deleteItem(operator.operator_id, index)}></span>
                       </td>
                   </tr>
                 )):

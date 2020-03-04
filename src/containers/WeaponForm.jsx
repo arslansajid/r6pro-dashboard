@@ -18,6 +18,7 @@ export default class WeaponForm extends React.Component {
     this.state = {
       loading: false,
       weapon: {
+        name: "",
         gadget1: '',
         gadget2: '',
         primary_weapon: '',
@@ -42,13 +43,13 @@ export default class WeaponForm extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-    if(match.params.operatorDetailsId) {
-      axios.get(`${API_END_POINT}/api/v1/operator_details/one`, {headers: {"Authentication": token, "UUID": UUID }})
-        .then((response) => {
-          this.setState({
-            weapon: response.data,
-          });
+    if(match.params.weaponId) {
+      axios.get(`${API_END_POINT}/api/v1/weapons/get_weapon?weapon_id=${match.params.weaponId}`, {headers: {"Authentication": token, "UUID": UUID }})
+      .then((response) => {
+        this.setState({
+          weapon: response.data,
         });
+      });
     }
   }
 
@@ -125,7 +126,7 @@ export default class WeaponForm extends React.Component {
     if (!loading) {
       this.setState({ loading: true });
       if(match.params.weaponId) {
-        axios.post(`${API_END_POINT}/api/v1/weapons/update_weapon`, fd, {headers: {"Authentication": token, "UUID": UUID }})
+        axios.put(`${API_END_POINT}/api/v1/weapons/update_weapon`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert("UPDATED");
@@ -134,7 +135,13 @@ export default class WeaponForm extends React.Component {
             window.alert('ERROR')
             this.setState({ loading: false });
           }
-        });
+        })
+        .catch((error) => {
+          this.setState({
+            loading: false,
+          })
+          window.alert('ERROR')
+        })
       } else {
         axios.post(`${API_END_POINT}/api/v1/weapons`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
@@ -186,8 +193,25 @@ export default class WeaponForm extends React.Component {
                     onSubmit={this.postWeapon}
                   >
 
+                  <div className="form-group row">
+                    <label
+                      className="control-label col-md-3 col-sm-3"
+                    >Name
+                    </label>
+                    <div className="col-md-6 col-sm-6">
+                      <input
+                        required
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        value={weapon.name}
+                        onChange={this.handleInputChange}
+                      />
+                    </div>
+                  </div>
 
-                <div className="form-group row">
+
+                  <div className="form-group row">
                       <label
                         className="control-label col-md-3 col-sm-3"
                       >Gadget 1
@@ -198,7 +222,7 @@ export default class WeaponForm extends React.Component {
                           type="text"
                           name="gadget1"
                           className="form-control"
-                          value={weapon.name}
+                          value={weapon.gadget1}
                           onChange={this.handleInputChange}
                         />
                       </div>

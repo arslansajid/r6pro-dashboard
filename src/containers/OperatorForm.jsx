@@ -18,18 +18,21 @@ export default class OperatorForm extends React.Component {
     this.state = {
       loading: false,
       operator: {
-        strategy_id: '',
+        // strategy_id: '',
         weapon_id: '',
         operator_detail_id: "",
         sketch_image: [],
-        summary_images: [],
+        // summary_images: [],
+        // strategy_map_images: [],
       },
       strategy: "",
       strategies: [],
       operatorDetail: "",
       operatorDetails: [],
       weapon: "",
-      weapons: []
+      weapons: [],
+      strategyMapImages: [],
+      summaryImages: [],
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -59,26 +62,33 @@ export default class OperatorForm extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-    if(match.params.itemId) {
-      this.getItembyId();
-    }
-  }
-
-  getItembyId = () => {
-    const { match } = this.props;
-    axios.get(`${API_END_POINT}/api/operators/one`, { params: {"itemId": match.params.itemId}, headers: {"auth-token" : token} })
-    .then((response) => {
-      this.setState({
-        operator: response.data.object[0],
-      }, () => {
-        axios.get(`${API_END_POINT}/api/operators/one`, { params: {"categoryId": this.state.operator.categoryId}, headers: {"auth-token" : token} })
-        .then(response => {
+    if(match.params.operatorId) {
+      axios.get(`${API_END_POINT}/api/v1/operators/get_operator?operator_id=${match.params.operatorId}`, {headers: {"Authentication": token, "UUID": UUID }})
+        .then((response) => {
           this.setState({
-            category: response.data.object[0],
-          })
-        })
-      });
-    });
+            operator: response.data,
+          }, () => {
+            // axios.get(`${API_END_POINT}/api/v1/strategies/get_strategy?strategy_id=${this.state.operator.strategy_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            // .then((response) => {
+            //   this.setState({
+            //     strategy: response.data,
+            //   })
+            // })
+            axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${this.state.operator.operator_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            .then((response) => {
+              this.setState({
+                operatorDetail: response.data,
+              });
+            })
+            axios.get(`${API_END_POINT}/api/v1/weapons/get_weapon?weapon_id=${this.state.operator.weapon_id}`, {headers: {"Authentication": token, "UUID": UUID }})
+            .then((response) => {
+              this.setState({
+                weapon: response.data,
+              });
+            });
+          });
+        });
+    }
   }
     
   setWeapon = (selectedWeapon) => {
@@ -101,15 +111,15 @@ export default class OperatorForm extends React.Component {
       }));
     }
 
-  setStrategy(selectedStrategy) {
-    this.setState(prevState => ({
-      strategy: selectedStrategy,
-      operator: {
-        ...prevState.operator,
-        strategy_id: selectedStrategy.strategy_id,
-      },
-    }));
-  }
+  // setStrategy(selectedStrategy) {
+  //   this.setState(prevState => ({
+  //     strategy: selectedStrategy,
+  //     operator: {
+  //       ...prevState.operator,
+  //       strategy_id: selectedStrategy.strategy_id,
+  //     },
+  //   }));
+  // }
 
   handleInputChange(event) {
     const { value, name } = event.target;
@@ -120,17 +130,65 @@ export default class OperatorForm extends React.Component {
   }
 
   handleImages = (event) => {
-    this.setState({ gallery: event.target.files });
+    const { operator } = this.state;
+    operator.sketch_image = event.target.files[0];
+    this.setState({ operator });
+  }
+
+  handleStrategyMapsImages = (event) => {
+    const { operator } = this.state;
+    // operator["strategy_map_images"] = event.target.files;
+    this.setState({ strategyMapImages: event.target.files, operator });
+  }
+
+  handleSummaryImages = (event) => {
+    const { operator } = this.state;
+    // operator["summary_images"] = event.target.files;
+    this.setState({ summaryImages: event.target.files, operator });
   }
 
   postOperator(event) {
     event.preventDefault();
     const { match, history, location } = this.props;
-    const { loading, operator } = this.state;
+    const { loading, operator, strategyMapImages, summaryImages } = this.state;
+
+    const fd = new FormData();
+    let strategyMapImagesArray = [];
+    let summaryImagesArray = [];
+
+    for (let index = 0; index < strategyMapImages.length; index += 1) {
+      strategyMapImagesArray.push(strategyMapImages[index]);
+    }
+
+    for (let index = 0; index < summaryImages.length; index += 1) {
+      summaryImagesArray.push(summaryImages[index]);
+    }
+
+    // operator.strategy_map_images = strategyMapImagesArray;
+    // operator.summary_images = strategyMapImagesArray;
+
+    // console.log("strategyMapImagesArray", strategyMapImagesArray)
+    // console.log("summaryImagesArray", summaryImagesArray)
+    
+    
+    Object.keys(operator).forEach((eachState, index) => {
+      fd.append(`${eachState}`, operator[eachState]);
+    })
+
+    strategyMapImagesArray.forEach((img, index) => {
+      fd.append(`strategy_map_images[${index}]`, img);
+      return img;
+    });
+
+    summaryImagesArray.forEach((img, index) => {
+      fd.append(`summary_images[${index}]`, img);
+      return img;
+    });
+
     if (!loading) {
       this.setState({ loading: true });
       if(match.params.operatorId) {
-        axios.post(`${API_END_POINT}/api/v1/operators/update`, operator, {headers: {"auth-token": token}})
+        axios.post(`${API_END_POINT}/api/v1/operators/update_operator?operator_id=${match.params.operatorId}`, fd, {headers: {"auth-token": token}})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert("UPDATED!");
@@ -141,7 +199,7 @@ export default class OperatorForm extends React.Component {
           }
         });
       } else {
-        axios.post(`${API_END_POINT}/api/v1/operators`, operator, {headers: {"Authentication": token, "UUID": UUID }})
+        axios.post(`${API_END_POINT}/api/v1/operators`, fd, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           if (response.data && response.status === 200) {
             window.alert("SAVED!");
@@ -159,7 +217,7 @@ export default class OperatorForm extends React.Component {
         })
       }
     }
-    }
+  }
 
   render() {
     const {
@@ -195,7 +253,7 @@ export default class OperatorForm extends React.Component {
                     onSubmit={this.postOperator}
                   >
 
-                  <div className="form-group row">
+                  {/* <div className="form-group row">
                     <label className="control-label col-md-3 col-sm-3">Strategy</label>
                     <div className="col-md-6 col-sm-6">
                       <Select
@@ -210,13 +268,13 @@ export default class OperatorForm extends React.Component {
                         required
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="form-group row">
                     <label className="control-label col-md-3 col-sm-3">Operator Details</label>
                     <div className="col-md-6 col-sm-6">
                       <Select
-                        name="strategy_id"
+                        name="operator_id"
                         value={operatorDetail}
                         onChange={value => this.setOperator(value)}
                         options={operatorDetails}
@@ -238,7 +296,7 @@ export default class OperatorForm extends React.Component {
                         onChange={value => this.setWeapon(value)}
                         options={weapons}
                         valueKey="weapon_id"
-                        labelKey="weapon_id"
+                        labelKey="name"
                         clearable={false}
                         backspaceRemoves={false}
                         required
@@ -266,7 +324,7 @@ export default class OperatorForm extends React.Component {
                     </div> */}
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">sketch_image</label>
+                      <label className="control-label col-md-3 col-sm-3">Sketch Image</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
@@ -281,14 +339,31 @@ export default class OperatorForm extends React.Component {
                     </div>
 
                     <div className="form-group row">
-                      <label className="control-label col-md-3 col-sm-3">summary_images</label>
+                      <label className="control-label col-md-3 col-sm-3">Summary Images (Min 3)</label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           type="file"
                           accept="image/*"
                           name="summary_images"
                           className="form-control"
-                          onChange={this.handleImages}
+                          // onChange={this.handleImages}
+                          onChange={this.handleSummaryImages}
+                          multiple
+                          // required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label className="control-label col-md-3 col-sm-3">Strategy Maps Images (Min 3)</label>
+                      <div className="col-md-6 col-sm-6">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          name="strategy_map_images"
+                          className="form-control"
+                          onChange={this.handleStrategyMapsImages}
+                          // onChange={this.handleImages}
                           multiple
                           // required
                         />

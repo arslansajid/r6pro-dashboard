@@ -48,8 +48,8 @@ export default class UserForm extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-      if (match.params.specialOfferId) {
-      axios.get(`${API_END_POINT}/api/v1/sites/get_site?site_id=${match.params.specialOfferId}`, {headers: {"Authentication": token, "UUID": UUID }})
+      if (match.params.siteId) {
+      axios.get(`${API_END_POINT}/api/v1/sites/get_site?site_id=${match.params.siteId}`, {headers: {"Authentication": token, "UUID": UUID }})
         .then((response) => {
           this.setState({
             site: response.data
@@ -94,18 +94,18 @@ export default class UserForm extends React.Component {
 
     if (!loading) {
         this.setState({ loading: true });
-        if(match.params.specialOfferId) {
+        if(match.params.siteId) {
           axios.put(
             `${API_END_POINT}/api/v1/sites/update_site`,
               null,
               {
                 params: {
-                  "site_id": match.params.specialOfferId,
+                  "site_id": match.params.siteId,
                   "name": site.name,
                 },
                 headers: {"Authentication": token, "UUID": UUID }
               })
-          // axios.put(`${API_END_POINT}/api/v1/sites/update_site?site_id=${match.params.specialOfferId}`, site , {headers: {"Authentication": token, "UUID": UUID }})
+          // axios.put(`${API_END_POINT}/api/v1/sites/update_site?site_id=${match.params.siteId}`, site , {headers: {"Authentication": token, "UUID": UUID }})
           .then((response) => {
             if (response.data && response.status === 200) {
               window.alert("UPDATED");
@@ -196,7 +196,7 @@ export default class UserForm extends React.Component {
                           clearable={false}
                           backspaceRemoves={false}
                           required
-                          readOnly={match.params.specialOfferId ? true : false}
+                          readOnly={match.params.siteId ? true : false}
                         />
                       </div>
                     </div>
