@@ -122,18 +122,40 @@ export default class Weapons extends React.Component {
     }
   }
 
+  // deleteWeapon(weaponId, index) {
+  //   const requestParams = {
+  //     "weaponId": weaponId,
+  //   }
+  //   if(confirm("Are you sure you want to delete this weapon?")) {
+  //     axios.delete(`${API_END_POINT}/api/weapons/destroy_weapon`, {data: requestParams, headers: {"auth-token": token}})
+  //       .then(response => {
+  //         const weapons = this.state.weapons.slice();
+  //         weapons.splice(index, 1);
+  //         this.setState({ weapons });
+  //         window.alert(response.data.msg);
+  //       });
+  //   }
+  // }
+
   deleteWeapon(weaponId, index) {
-    const requestParams = {
-      "weaponId": weaponId,
-    }
+    const token = Cookie.get('r6pro_access_token');
     if(confirm("Are you sure you want to delete this weapon?")) {
-      axios.delete(`${API_END_POINT}/api/weapons/delete`, {data: requestParams, headers: {"auth-token": token}})
+      axios.delete(`${API_END_POINT}/api/v1/weapons/destroy_weapon`, {
+        headers: {"Authentication": token, "UUID": UUID },
+        data: {
+          "weapon_id": weaponId
+        }
+      })
         .then(response => {
           const weapons = this.state.weapons.slice();
           weapons.splice(index, 1);
           this.setState({ weapons });
-          window.alert(response.data.msg);
-        });
+          window.alert(response.data.message);
+          console.log(response.data.message);
+        })
+        .catch(() => {
+          window.alert("ERROR")
+        })
     }
   }
 
