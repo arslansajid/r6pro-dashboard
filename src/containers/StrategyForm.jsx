@@ -21,6 +21,7 @@ export default class StrategyForm extends React.Component {
       strategy: {
         name: "",
         site_id: "",
+        map_id: "",
         strategy_type: "",
         image: "",
       },
@@ -28,6 +29,8 @@ export default class StrategyForm extends React.Component {
       gallery: '',
       site: '',
       sites: [],
+      map: '',
+      maps: [],
       operators: [],
       description: RichTextEditor.createEmptyValue(),
     };
@@ -50,6 +53,12 @@ export default class StrategyForm extends React.Component {
         operators: response.data,
       })
     })
+    axios.get(`${API_END_POINT}/api/v1/maps`, {headers: {"Authentication": token, "UUID": UUID }} )
+      .then(response => {
+        this.setState({
+          maps: response.data,
+        })
+      })
   }
 
   componentDidMount() {
@@ -100,6 +109,16 @@ export default class StrategyForm extends React.Component {
       strategy: {
         ...prevState.strategy,
         site_id: selectedSite.site_id,
+      },
+    }))
+  }
+
+  setMap(selectedMap) {
+    this.setState(prevState => ({
+      map: selectedMap,
+      strategy: {
+        ...prevState.strategy,
+        map_id: selectedMap.map_id,
       },
     }))
   }
@@ -200,6 +219,8 @@ export default class StrategyForm extends React.Component {
       description,
       operators,
       selectedOperators,
+      maps,
+      map,
     } = this.state;
 
     return (
@@ -245,6 +266,23 @@ export default class StrategyForm extends React.Component {
                           value={site}
                           onChange={value => this.setSite(value)}
                           options={sites}
+                          valueKey="id"
+                          labelKey="name"
+                          clearable={false}
+                          backspaceRemoves={false}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label className="control-label col-md-3 col-sm-3">Map</label>
+                      <div className="col-md-6 col-sm-6">
+                        <Select
+                          name="map_id"
+                          value={map}
+                          onChange={value => this.setMap(value)}
+                          options={maps}
                           valueKey="id"
                           labelKey="name"
                           clearable={false}
