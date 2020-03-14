@@ -18,13 +18,11 @@ export default class OperatorForm extends React.Component {
     this.state = {
       loading: false,
       operator: {
-        // strategy_id: '',
         weapon_id: '',
         operator_detail_id: "",
         sketch_image: [],
         video: "",
-        // summary_images: [],
-        // strategy_map_images: [],
+        upload_text: ""
       },
       strategy: "",
       strategies: [],
@@ -133,6 +131,12 @@ export default class OperatorForm extends React.Component {
   handleImages = (event) => {
     const { operator } = this.state;
     operator.sketch_image = event.target.files[0];
+    this.setState({ operator });
+  }
+
+  handleVideo = (event) => {
+    const { operator } = this.state;
+    operator.video = event.target.files[0];
     this.setState({ operator });
   }
 
@@ -358,7 +362,7 @@ export default class OperatorForm extends React.Component {
                           accept="video/*"
                           name="video"
                           className="form-control"
-                          onChange={this.handleImages}
+                          onChange={this.handleVideo}
                         // multiple
                         // required
                         />
@@ -368,15 +372,15 @@ export default class OperatorForm extends React.Component {
                     <div className="form-group row">
                       <label
                         className="control-label col-md-3 col-sm-3"
-                      >Title
+                      >upload_text
                       </label>
                       <div className="col-md-6 col-sm-6">
                         <input
                           // required
                           type="text"
-                          name="title"
+                          name="upload_text"
                           className="form-control"
-                          value={operator.title}
+                          value={operator.upload_text}
                           onChange={this.handleInputChange}
                         />
                       </div>
