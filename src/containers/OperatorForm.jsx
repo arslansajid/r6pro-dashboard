@@ -22,6 +22,7 @@ export default class OperatorForm extends React.Component {
         weapon_id: '',
         operator_detail_id: "",
         sketch_image: [],
+        video: "",
         // summary_images: [],
         // strategy_map_images: [],
       },
@@ -40,30 +41,30 @@ export default class OperatorForm extends React.Component {
   }
 
   componentWillMount() {
-    axios.get(`${API_END_POINT}/api/v1/strategies`, {headers: {"Authentication": token, "UUID": UUID }})
+    axios.get(`${API_END_POINT}/api/v1/strategies`, { headers: { "Authentication": token, "UUID": UUID } })
       .then(response => {
         this.setState({
           strategies: response.data,
         })
       })
-      axios.get(`${API_END_POINT}/api/v1/operator_details`, {headers: {"Authentication": token, "UUID": UUID }})
+    axios.get(`${API_END_POINT}/api/v1/operator_details`, { headers: { "Authentication": token, "UUID": UUID } })
       .then(response => {
         this.setState({
           operatorDetails: response.data,
         })
       })
-      axios.get(`${API_END_POINT}/api/v1/weapons`, {headers: {"Authentication": token, "UUID": UUID }})
+    axios.get(`${API_END_POINT}/api/v1/weapons`, { headers: { "Authentication": token, "UUID": UUID } })
       .then(response => {
         this.setState({
           weapons: response.data,
         })
       })
-    }
+  }
 
   componentDidMount() {
     const { match } = this.props;
-    if(match.params.operatorId) {
-      axios.get(`${API_END_POINT}/api/v1/operators/get_operator?operator_id=${match.params.operatorId}`, {headers: {"Authentication": token, "UUID": UUID }})
+    if (match.params.operatorId) {
+      axios.get(`${API_END_POINT}/api/v1/operators/get_operator?operator_id=${match.params.operatorId}`, { headers: { "Authentication": token, "UUID": UUID } })
         .then((response) => {
           this.setState({
             operator: response.data,
@@ -74,23 +75,23 @@ export default class OperatorForm extends React.Component {
             //     strategy: response.data,
             //   })
             // })
-            axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${this.state.operator.operator_id}`, {headers: {"Authentication": token, "UUID": UUID }})
-            .then((response) => {
-              this.setState({
-                operatorDetail: response.data,
+            axios.get(`${API_END_POINT}/api/v1/operator_details/get_operator_detail?operator_detail_id=${this.state.operator.operator_id}`, { headers: { "Authentication": token, "UUID": UUID } })
+              .then((response) => {
+                this.setState({
+                  operatorDetail: response.data,
+                });
+              })
+            axios.get(`${API_END_POINT}/api/v1/weapons/get_weapon?weapon_id=${this.state.operator.weapon_id}`, { headers: { "Authentication": token, "UUID": UUID } })
+              .then((response) => {
+                this.setState({
+                  weapon: response.data,
+                });
               });
-            })
-            axios.get(`${API_END_POINT}/api/v1/weapons/get_weapon?weapon_id=${this.state.operator.weapon_id}`, {headers: {"Authentication": token, "UUID": UUID }})
-            .then((response) => {
-              this.setState({
-                weapon: response.data,
-              });
-            });
           });
         });
     }
   }
-    
+
   setWeapon = (selectedWeapon) => {
     this.setState(prevState => ({
       weapon: selectedWeapon,
@@ -108,8 +109,8 @@ export default class OperatorForm extends React.Component {
         ...prevState.operator,
         operator_detail_id: selectedOperator.operator_detail_id,
       }
-      }));
-    }
+    }));
+  }
 
   // setStrategy(selectedStrategy) {
   //   this.setState(prevState => ({
@@ -169,8 +170,8 @@ export default class OperatorForm extends React.Component {
 
     // console.log("strategyMapImagesArray", strategyMapImagesArray)
     // console.log("summaryImagesArray", summaryImagesArray)
-    
-    
+
+
     Object.keys(operator).forEach((eachState, index) => {
       fd.append(`${eachState}`, operator[eachState]);
     })
@@ -187,34 +188,34 @@ export default class OperatorForm extends React.Component {
 
     if (!loading) {
       this.setState({ loading: true });
-      if(match.params.operatorId) {
-        axios.post(`${API_END_POINT}/api/v1/operators/update_operator?operator_id=${match.params.operatorId}`, fd, {headers: {"auth-token": token}})
-        .then((response) => {
-          if (response.data && response.status === 200) {
-            window.alert("UPDATED!");
-            this.setState({ loading: false });
-          } else {
-            window.alert('ERROR')
-            this.setState({ loading: false });
-          }
-        });
+      if (match.params.operatorId) {
+        axios.post(`${API_END_POINT}/api/v1/operators/update_operator?operator_id=${match.params.operatorId}`, fd, { headers: { "auth-token": token } })
+          .then((response) => {
+            if (response.data && response.status === 200) {
+              window.alert("UPDATED!");
+              this.setState({ loading: false });
+            } else {
+              window.alert('ERROR')
+              this.setState({ loading: false });
+            }
+          });
       } else {
-        axios.post(`${API_END_POINT}/api/v1/operators`, fd, {headers: {"Authentication": token, "UUID": UUID }})
-        .then((response) => {
-          if (response.data && response.status === 200) {
-            window.alert("SAVED!");
-            this.setState({ loading: false });
-          } else {
-            window.alert('ERROR')
-            this.setState({ loading: false });
-          }
-        })
-        .catch((error) => {
-          this.setState({
-            loading: false,
+        axios.post(`${API_END_POINT}/api/v1/operators`, fd, { headers: { "Authentication": token, "UUID": UUID } })
+          .then((response) => {
+            if (response.data && response.status === 200) {
+              window.alert("SAVED!");
+              this.setState({ loading: false });
+            } else {
+              window.alert('ERROR')
+              this.setState({ loading: false });
+            }
           })
-          window.alert('ERROR')
-        })
+          .catch((error) => {
+            this.setState({
+              loading: false,
+            })
+            window.alert('ERROR')
+          })
       }
     }
   }
@@ -238,7 +239,7 @@ export default class OperatorForm extends React.Component {
       <div className="row animated fadeIn">
         <div className="col-12">
           <div className="row">
-          
+
             <div className="col-md-12 col-sm-12">
               <div className="x_panel">
                 <div className="x_title">
@@ -253,75 +254,39 @@ export default class OperatorForm extends React.Component {
                     onSubmit={this.postOperator}
                   >
 
-                  {/* <div className="form-group row">
-                    <label className="control-label col-md-3 col-sm-3">Strategy</label>
-                    <div className="col-md-6 col-sm-6">
-                      <Select
-                        name="strategy_id"
-                        value={strategy}
-                        onChange={value => this.setStrategy(value)}
-                        options={strategies}
-                        valueKey="_id"
-                        labelKey="name"
-                        clearable={false}
-                        backspaceRemoves={false}
-                        required
-                      />
-                    </div>
-                  </div> */}
-
-                  <div className="form-group row">
-                    <label className="control-label col-md-3 col-sm-3">Operator Details</label>
-                    <div className="col-md-6 col-sm-6">
-                      <Select
-                        name="operator_id"
-                        value={operatorDetail}
-                        onChange={value => this.setOperator(value)}
-                        options={operatorDetails}
-                        valueKey="_id"
-                        labelKey="name"
-                        clearable={false}
-                        backspaceRemoves={false}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group row">
-                    <label className="control-label col-md-3 col-sm-3">Weapon Details</label>
-                    <div className="col-md-6 col-sm-6">
-                      <Select
-                        name="weapon_id"
-                        value={weapon}
-                        onChange={value => this.setWeapon(value)}
-                        options={weapons}
-                        valueKey="weapon_id"
-                        labelKey="name"
-                        clearable={false}
-                        backspaceRemoves={false}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                {/* <div className="form-group row">
-                      <label
-                        className="control-label col-md-3 col-sm-3"
-                      >weapon_id
-                      </label>
+                    <div className="form-group row">
+                      <label className="control-label col-md-3 col-sm-3">Operator Details</label>
                       <div className="col-md-6 col-sm-6">
-                        <input
+                        <Select
+                          name="operator_id"
+                          value={operatorDetail}
+                          onChange={value => this.setOperator(value)}
+                          options={operatorDetails}
+                          valueKey="_id"
+                          labelKey="name"
+                          clearable={false}
+                          backspaceRemoves={false}
                           required
-                          type="text"
-                          name="weapon_id"
-                          className="form-control"
-                          value={operator.weapon_id}
-                          onChange={this.handleInputChange}
-                          // pattern="^[1-5]$"
-                          // title="Operator should only range between 1 to 5"
                         />
                       </div>
-                    </div> */}
+                    </div>
+
+                    <div className="form-group row">
+                      <label className="control-label col-md-3 col-sm-3">Weapon Details</label>
+                      <div className="col-md-6 col-sm-6">
+                        <Select
+                          name="weapon_id"
+                          value={weapon}
+                          onChange={value => this.setWeapon(value)}
+                          options={weapons}
+                          valueKey="weapon_id"
+                          labelKey="name"
+                          clearable={false}
+                          backspaceRemoves={false}
+                          required
+                        />
+                      </div>
+                    </div>
 
                     <div className="form-group row">
                       <label className="control-label col-md-3 col-sm-3">Sketch Image</label>
@@ -333,7 +298,7 @@ export default class OperatorForm extends React.Component {
                           className="form-control"
                           onChange={this.handleImages}
                           multiple
-                          // required
+                        // required
                         />
                       </div>
                     </div>
@@ -349,7 +314,7 @@ export default class OperatorForm extends React.Component {
                           // onChange={this.handleImages}
                           onChange={this.handleSummaryImages}
                           multiple
-                          // required
+                        // required
                         />
                       </div>
                     </div>
@@ -365,7 +330,7 @@ export default class OperatorForm extends React.Component {
                           onChange={this.handleStrategyMapsImages}
                           // onChange={this.handleImages}
                           multiple
-                          // required
+                        // required
                         />
                       </div>
                     </div>
@@ -385,11 +350,43 @@ export default class OperatorForm extends React.Component {
                       </div>
                     </div> */}
 
+                    <div className="form-group row">
+                      <label className="control-label col-md-3 col-sm-3">Video</label>
+                      <div className="col-md-6 col-sm-6">
+                        <input
+                          type="file"
+                          accept="video/*"
+                          name="video"
+                          className="form-control"
+                          onChange={this.handleImages}
+                        // multiple
+                        // required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label
+                        className="control-label col-md-3 col-sm-3"
+                      >Title
+                      </label>
+                      <div className="col-md-6 col-sm-6">
+                        <input
+                          // required
+                          type="text"
+                          name="title"
+                          className="form-control"
+                          value={operator.title}
+                          onChange={this.handleInputChange}
+                        />
+                      </div>
+                    </div>
+
                     <div className="ln_solid" />
                     <div className="form-group row">
                       <div className="col-md-6 col-sm-6 offset-md-3">
                         <Button className={`btn btn-success btn-lg ${this.state.loading ? 'disabled' : ''}`}>
-                          <i className={`fa fa-spinner fa-pulse ${this.state.loading ? '' : 'd-none'}`}/> Submit
+                          <i className={`fa fa-spinner fa-pulse ${this.state.loading ? '' : 'd-none'}`} /> Submit
                         </Button>
                       </div>
                     </div>
