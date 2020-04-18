@@ -169,13 +169,6 @@ export default class OperatorForm extends React.Component {
       summaryImagesArray.push(summaryImages[index]);
     }
 
-    // operator.strategy_map_images = strategyMapImagesArray;
-    // operator.summary_images = strategyMapImagesArray;
-
-    // console.log("strategyMapImagesArray", strategyMapImagesArray)
-    // console.log("summaryImagesArray", summaryImagesArray)
-
-
     Object.keys(operator).forEach((eachState, index) => {
       fd.append(`${eachState}`, operator[eachState]);
     })
