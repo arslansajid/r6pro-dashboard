@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import RichTextEditor from 'react-rte';
+import OperatorForm from './OperatorForm';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { API_END_POINT } from '../config';
 import Cookie from 'js-cookie';
@@ -224,10 +224,12 @@ export default class StrategyForm extends React.Component {
 
     handleSelectChange = (value) => {
       const { strategy, operatorDetail } = this.state;
-      const lastItem = value.slice(-1)[0];
-      operatorDetail["name"] = lastItem.name + "-" + strategy["name"];
-      operatorDetail["description"] = lastItem.description;
-      this.toggleOperatorModal();
+      // const lastItem = value.slice(-1)[0];
+      // operatorDetail["name"] = lastItem.name + "-" + strategy["name"];
+      // operatorDetail["description"] = lastItem.description;
+      if(!!value && value.length > this.state.selectedOperators.length) {
+        this.toggleOperatorModal();
+      }
       console.log('You\'ve selected:', value);
       this.setState({ selectedOperators: value, operatorDetail });
     }
@@ -238,37 +240,37 @@ export default class StrategyForm extends React.Component {
       })
     }
 
-    postOperatorCopy = (event) => {
-      event.preventDefault();
-      const { loading, operatorDetail } = this.state;
+    // postOperatorCopy = (event) => {
+    //   event.preventDefault();
+    //   const { loading, operatorDetail } = this.state;
 
-      const fd = new FormData();
+    //   const fd = new FormData();
 
-      Object.keys(operatorDetail).forEach((eachState) => {
-        fd.append(`${eachState}`, operatorDetail[eachState]);
-      })
+    //   Object.keys(operatorDetail).forEach((eachState) => {
+    //     fd.append(`${eachState}`, operatorDetail[eachState]);
+    //   })
 
-    if (!loading) {
-      this.setState({ loading: true });
-      axios.post(`${API_END_POINT}/api/v1/operator_details`, fd, {headers: {"Authentication": token, "UUID": UUID }})
-        .then((response) => {
-          if (response.data && response.status === 200) {
-            window.alert("SAVED!");
-            this.toggleOperatorModal();
-            this.setState({ loading: false });
-          } else {
-            window.alert('ERROR', response.data.error)
-            this.setState({ loading: false });
-          }
-        })
-        .catch((error) => {
-          this.setState({
-            loading: false,
-          })
-          window.alert('ERROR')
-        })
-      }
-    }
+    // if (!loading) {
+    //   this.setState({ loading: true });
+    //   axios.post(`${API_END_POINT}/api/v1/operator_details`, fd, {headers: {"Authentication": token, "UUID": UUID }})
+    //     .then((response) => {
+    //       if (response.data && response.status === 200) {
+    //         window.alert("SAVED!");
+    //         this.toggleOperatorModal();
+    //         this.setState({ loading: false });
+    //       } else {
+    //         window.alert('ERROR', response.data.error)
+    //         this.setState({ loading: false });
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       this.setState({
+    //         loading: false,
+    //       })
+    //       window.alert('ERROR')
+    //     })
+    //   }
+    // }
 
   render() {
     console.log('this.state', this.state);
@@ -278,13 +280,13 @@ export default class StrategyForm extends React.Component {
       sites,
       site,
       showOperatorModal,
-      operatorDetail,
+      // operatorDetail,
       operators,
       selectedOperators,
       maps,
       map,
     } = this.state;
-
+    const lastSelectedOperator = selectedOperators.slice(-1)[0];
     return (
       <div className="row animated fadeIn">
         <div className="col-12">
@@ -468,60 +470,17 @@ export default class StrategyForm extends React.Component {
                     </div>
                   </form>
                   {showOperatorModal && (
-                    <Modal isOpen={showOperatorModal} toggle={() => this.toggleOperatorModal()} className={"operator-modal"}>
+                    <Modal size="lg" isOpen={showOperatorModal} toggle={() => this.toggleOperatorModal()} className={"operator-modal"}>
                       <ModalHeader toggle={() => this.toggleOperatorModal()}>Operator Details</ModalHeader>
                       <ModalBody>
-                        <div className="form-group row">
-                          <label
-                            className="control-label col-md-3 col-sm-3"
-                          >Name
-                          </label>
-                          <div className="col-md-6 col-sm-6">
-                            <input
-                              required
-                              type="text"
-                              name="name"
-                              className="form-control"
-                              value={operatorDetail.name}
-                              onChange={this.handleModalInputChange}
-                            />
-                          </div>
-                        </div>
-                        <div className="form-group row">
-                          <label
-                            className="control-label col-md-3 col-sm-3"
-                          >Description
-                          </label>
-                          <div className="col-md-6 col-sm-6">
-                            <input
-                              required
-                              type="text"
-                              name="description"
-                              className="form-control"
-                              value={operatorDetail.description}
-                              onChange={this.handleModalInputChange}
-                            />
-                          </div>
-                        </div>
-                        <div className="form-group row">
-                          <label className="control-label col-md-3 col-sm-3">Image</label>
-                          <div className="col-md-6 col-sm-6">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              name="image"
-                              className="form-control"
-                              onChange={this.handleModalImages}
-                              multiple
-                              required
-                            />
-                          </div>
-                        </div>
+                        <OperatorForm
+                          {...this.props}
+                          strategyName={strategy.name} 
+                          selectedOperator={lastSelectedOperator}
+                          isModal={true}
+                        />
                       </ModalBody>
                       <ModalFooter>
-                        <Button onClick={(e) => this.postOperatorCopy(e)} type="submit" className={`btn btn-success ${this.state.loading ? 'disabled' : ''}`}>
-                          <i className={`fa fa-spinner fa-pulse ${this.state.loading ? '' : 'd-none'}`}/> Submit
-                        </Button>{' '}
                         <Button type="reset" color="danger" size="md" onClick={() => this.toggleOperatorModal()}>Cancel</Button>
                       </ModalFooter>
                     </Modal>

@@ -26,7 +26,7 @@ export default class OperatorForm extends React.Component {
       },
       strategy: "",
       strategies: [],
-      operatorDetail: "",
+      operatorDetail: this.props.selectedOperator ? this.props.selectedOperator : "",
       operatorDetails: [],
       weapon: "",
       weapons: [],
@@ -229,8 +229,9 @@ export default class OperatorForm extends React.Component {
       weapon,
       weapons
     } = this.state;
-    const { location } = this.props;
-    console.log(this.state);
+    const { isModal, strategyName, selectedOperator } = this.props;
+
+    console.log("#####PROPS ::", this.props);
 
     return (
       <div className="row animated fadeIn">
@@ -264,6 +265,7 @@ export default class OperatorForm extends React.Component {
                           clearable={false}
                           backspaceRemoves={false}
                           required
+                          disabled={isModal}
                         />
                       </div>
                     </div>

@@ -138,11 +138,11 @@ export default class Strategies extends React.Component {
                     <td>{strategy.name}</td>
                     {/* <td>{strategy.size}</td> */}
                     <td>{strategy.strategy_type}</td>
-                    <td>
+                    {/* <td>
                       <Link to={`/strategies/operator/${strategy.strategy_id}`}>
                         <button type="button" className="btn btn-info btn-sm">Operator</button>
                       </Link>
-                    </td>
+                    </td> */}
                       <td>
                         <Link to={`/strategies/edit-strategy/${strategy.strategy_id}`}>
                           <span className="fa fa-edit" aria-hidden="true"></span>
