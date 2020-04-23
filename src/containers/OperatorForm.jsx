@@ -19,7 +19,7 @@ export default class OperatorForm extends React.Component {
       loading: false,
       operator: {
         weapon_id: '',
-        operator_detail_id: "",
+        operator_detail_id: this.props.selectedOperator ? this.props.selectedOperator.operator_id : "",
         sketch_image: [],
         video: "",
         upload_text: ""
